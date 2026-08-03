@@ -5,7 +5,7 @@
   "scripts": {
     "predev": "npm run build:content",
     "prebuild": "npm run build:content && npm run check:media",
-    "build:content": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
+    "build:content": "node scripts/build-posts.mjs && node scripts/build-videos.mjs && node scripts/build-admin-index.mjs",
     "check:media": "node scripts/check-media.mjs",
     "dev": "next dev",
     "build": "next build",
