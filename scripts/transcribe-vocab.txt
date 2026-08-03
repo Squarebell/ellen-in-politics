@@ -1,0 +1,6 @@
+# Names and terms the transcriber should spell correctly.
+# One per line. Add politician names, places, or phrases that
+# keep coming out wrong in captions, then re-run transcription.
+Ellen Carty
+Ellen in Politics
+elleninpolitics
