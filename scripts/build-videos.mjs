@@ -253,6 +253,26 @@ const videos = fs
   .map(({ _published, ...video }) => video)
   .sort(compareVideos);
 
+/** Only the newest featured video keeps featured:true in the public JSON. */
+const featuredVideos = videos.filter((video) => video.featured);
+const featuredWinnerSlug =
+  featuredVideos.length <= 1
+    ? featuredVideos[0]?.slug
+    : [...featuredVideos].sort((a, b) => {
+        const aTime = a.date ? new Date(a.date).getTime() : 0;
+        const bTime = b.date ? new Date(b.date).getTime() : 0;
+        if (bTime !== aTime) return bTime - aTime;
+        return a.slug.localeCompare(b.slug);
+      })[0].slug;
+
+const exclusiveVideos = videos.map((video) => ({
+  ...video,
+  featured: featuredWinnerSlug ? video.slug === featuredWinnerSlug : false,
+}));
+
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
-fs.writeFileSync(outFile, JSON.stringify(videos, null, 2) + "\n");
-console.log(`Wrote ${videos.length} published videos → src/data/videos.json`);
+fs.writeFileSync(outFile, JSON.stringify(exclusiveVideos, null, 2) + "\n");
+console.log(
+  `Wrote ${exclusiveVideos.length} published videos → src/data/videos.json` +
+    (featuredWinnerSlug ? ` (featured: ${featuredWinnerSlug})` : ""),
+);

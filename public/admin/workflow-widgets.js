@@ -557,12 +557,12 @@
                     return item.title;
                   })
                   .join(", ") +
-                ". Turn those off so only one is pinned."
+                ". After you publish, the newest featured item keeps the homepage pin and the others are cleared automatically."
             )
           : h(
               "p",
               { className: "featured-toggle__hint" },
-              "Only one Writing card / Watch clip should be featured at a time."
+              "Pins the homepage feature. If more than one is marked, the newest by date wins and older pins are cleared after publish."
             )
       );
     },

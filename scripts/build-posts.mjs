@@ -103,6 +103,25 @@ const posts = fs
   .map(({ _published, ...post }) => post)
   .sort(comparePosts);
 
+/** Only the newest featured post keeps featured:true in the public JSON. */
+const featuredPosts = posts.filter((post) => post.featured);
+const featuredWinnerSlug =
+  featuredPosts.length <= 1
+    ? featuredPosts[0]?.slug
+    : [...featuredPosts].sort((a, b) => {
+        const byDate = new Date(b.date).getTime() - new Date(a.date).getTime();
+        if (byDate !== 0) return byDate;
+        return a.slug.localeCompare(b.slug);
+      })[0].slug;
+
+const exclusivePosts = posts.map((post) => ({
+  ...post,
+  featured: featuredWinnerSlug ? post.slug === featuredWinnerSlug : false,
+}));
+
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
-fs.writeFileSync(outFile, JSON.stringify(posts, null, 2) + "\n");
-console.log(`Wrote ${posts.length} published posts → src/data/posts.json`);
+fs.writeFileSync(outFile, JSON.stringify(exclusivePosts, null, 2) + "\n");
+console.log(
+  `Wrote ${exclusivePosts.length} published posts → src/data/posts.json` +
+    (featuredWinnerSlug ? ` (featured: ${featuredWinnerSlug})` : ""),
+);

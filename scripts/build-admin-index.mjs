@@ -82,8 +82,23 @@ function readVideos() {
     .sort((a, b) => a.title.localeCompare(b.title));
 }
 
-const posts = readPosts();
-const videos = readVideos();
+function withExclusiveFeatured(entries) {
+  const featured = entries.filter((entry) => entry.featured);
+  if (featured.length <= 1) return entries;
+  const winner = [...featured].sort((a, b) => {
+    const aTime = a.date ? new Date(a.date).getTime() : 0;
+    const bTime = b.date ? new Date(b.date).getTime() : 0;
+    if (bTime !== aTime) return bTime - aTime;
+    return a.slug.localeCompare(b.slug);
+  })[0];
+  return entries.map((entry) => ({
+    ...entry,
+    featured: entry.slug === winner.slug,
+  }));
+}
+
+const posts = withExclusiveFeatured(readPosts());
+const videos = withExclusiveFeatured(readVideos());
 
 const topics = Array.from(
   new Set([
