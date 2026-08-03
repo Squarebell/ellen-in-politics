@@ -879,8 +879,14 @@
       this._mounted = true;
       this.recheck();
     },
+    probeFields: function () {
+      // Decap reserves the key "fields" for nested schemas — use probe_fields.
+      return listFromImmutable(
+        this.props.field.get("probe_fields") || this.props.field.get("fields")
+      );
+    },
     componentDidUpdate: function (prevProps) {
-      var fields = listFromImmutable(this.props.field.get("fields"));
+      var fields = this.probeFields();
       var changed = fields.some(
         function (name) {
           var a = this.props.entry && this.props.entry.getIn(["data", name]);
@@ -895,7 +901,7 @@
     },
     recheck: function () {
       var self = this;
-      var fields = listFromImmutable(this.props.field.get("fields"));
+      var fields = this.probeFields();
       var paths = fields
         .map(function (name) {
           var value = self.props.entry && self.props.entry.getIn(["data", name]);

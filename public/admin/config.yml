@@ -143,7 +143,8 @@ collections:
         name: mediaHealth
         widget: media-health
         required: false
-        fields: ["image", "ogImage"]
+        # Must not use key "fields" — Decap reserves that for nested field schemas.
+        probe_fields: ["image", "ogImage"]
       - label: Body
         name: body
         widget: markdown
@@ -292,7 +293,8 @@ collections:
         name: mediaHealth
         widget: media-health
         required: false
-        fields: ["video", "poster", "captions"]
+        # Must not use key "fields" — Decap reserves that for nested field schemas.
+        probe_fields: ["video", "poster", "captions"]
       - label: Plain transcript / notes
         name: body
         widget: markdown
