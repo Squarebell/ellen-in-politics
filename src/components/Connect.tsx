@@ -5,9 +5,12 @@ import { socials } from "@/lib/socials";
 import { Reveal } from "./Reveal";
 
 export function Connect() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle",
+  );
+  const [errorMessage, setErrorMessage] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
@@ -15,14 +18,38 @@ export function Connect() {
     const email = String(data.get("email") ?? "").trim();
     const message = String(data.get("message") ?? "").trim();
 
-    const subject = encodeURIComponent(`Hello from ${name || "the site"}`);
-    const body = encodeURIComponent(
-      `${message}\n\n— ${name}${email ? ` (${email})` : ""}`,
-    );
+    setStatus("sending");
+    setErrorMessage("");
 
-    window.location.href = `${socials.email.href}?subject=${subject}&body=${body}`;
-    setStatus("sent");
-    form.reset();
+    try {
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_CONTACT_API ||
+          "https://ellen-contact.squarebell.workers.dev",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, message }),
+        },
+      );
+      const result = (await response.json()) as {
+        ok?: boolean;
+        error?: string;
+      };
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "Could not send message.");
+      }
+
+      setStatus("sent");
+      form.reset();
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Could not send message. Please try again.",
+      );
+    }
   }
 
   return (
@@ -39,25 +66,23 @@ export function Connect() {
           </p>
 
           <ul className="mt-10 space-y-0">
-            {[socials.instagram, socials.linkedin, socials.pinterest].map(
-              (item) => (
-                <li key={item.href} className="border-t border-rule">
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-baseline justify-between py-4 transition"
-                  >
-                    <span className="text-[13px] font-medium tracking-[0.08em] text-ink uppercase">
-                      {item.label}
-                    </span>
-                    <span className="text-[14px] text-muted transition group-hover:text-denim">
-                      {item.handle}
-                    </span>
-                  </a>
-                </li>
-              ),
-            )}
+            {[socials.instagram, socials.linkedin].map((item) => (
+              <li key={item.href} className="border-t border-rule">
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-baseline justify-between py-4 transition"
+                >
+                  <span className="text-[13px] font-medium tracking-[0.08em] text-ink uppercase">
+                    {item.label}
+                  </span>
+                  <span className="text-[14px] text-muted transition group-hover:text-denim">
+                    {item.handle}
+                  </span>
+                </a>
+              </li>
+            ))}
           </ul>
         </Reveal>
 
@@ -71,7 +96,8 @@ export function Connect() {
                 id="name"
                 name="name"
                 required
-                className="w-full border-b border-rule bg-transparent py-3 text-[16px] text-ink outline-none transition placeholder:text-muted/50 focus:border-ink"
+                disabled={status === "sending"}
+                className="w-full border-b border-rule bg-transparent py-3 text-[16px] text-ink outline-none transition placeholder:text-muted/50 focus:border-ink disabled:opacity-60"
                 placeholder="Your name"
               />
             </div>
@@ -84,7 +110,8 @@ export function Connect() {
                 name="email"
                 type="email"
                 required
-                className="w-full border-b border-rule bg-transparent py-3 text-[16px] text-ink outline-none transition placeholder:text-muted/50 focus:border-ink"
+                disabled={status === "sending"}
+                className="w-full border-b border-rule bg-transparent py-3 text-[16px] text-ink outline-none transition placeholder:text-muted/50 focus:border-ink disabled:opacity-60"
                 placeholder="you@email.com"
               />
             </div>
@@ -97,21 +124,26 @@ export function Connect() {
                 name="message"
                 required
                 rows={4}
-                className="w-full resize-y border-b border-rule bg-transparent py-3 text-[16px] text-ink outline-none transition placeholder:text-muted/50 focus:border-ink"
+                disabled={status === "sending"}
+                className="w-full resize-y border-b border-rule bg-transparent py-3 text-[16px] text-ink outline-none transition placeholder:text-muted/50 focus:border-ink disabled:opacity-60"
                 placeholder="What should we talk about?"
               />
             </div>
             <div className="pt-4">
               <button
                 type="submit"
-                className="btn-apple bg-ink text-white hover:opacity-90"
+                disabled={status === "sending"}
+                className="btn-apple bg-ink text-white hover:opacity-90 disabled:opacity-60"
               >
-                Send message
+                {status === "sending" ? "Sending…" : "Send message"}
               </button>
               {status === "sent" && (
                 <p className="mt-4 text-[13px] text-muted">
-                  Opening your email app — update the address when ready.
+                  Message sent — thanks for reaching out.
                 </p>
+              )}
+              {status === "error" && (
+                <p className="mt-4 text-[13px] text-flag">{errorMessage}</p>
               )}
             </div>
           </form>

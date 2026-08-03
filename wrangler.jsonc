@@ -12,9 +12,11 @@
     "enabled": true
   },
   "workers_dev": true,
-  // Requires elleninpolitics.com as an active Cloudflare zone (nameservers on Cloudflare).
   "routes": [
     { "pattern": "elleninpolitics.com", "custom_domain": true },
     { "pattern": "www.elleninpolitics.com", "custom_domain": true }
-  ]
+  ],
+  "vars": {
+    "NEXT_PUBLIC_CONTACT_API": "https://ellen-contact.squarebell.workers.dev"
+  }
 }

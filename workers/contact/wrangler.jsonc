@@ -1,0 +1,18 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "ellen-contact",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "send_email": [
+    {
+      "name": "CONTACT_EMAIL",
+      "destination_address": "ellencarty2008@icloud.com"
+    }
+  ],
+  "vars": {
+    "CONTACT_TO_EMAIL": "ellencarty2008@icloud.com",
+    "ALLOWED_ORIGINS": "https://elleninpolitics.com,https://www.elleninpolitics.com,https://ellen-in-politics.squarebell.workers.dev"
+  }
+}

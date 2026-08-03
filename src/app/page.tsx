@@ -9,6 +9,8 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { Story } from "@/components/Story";
 import { getAllPosts } from "@/lib/posts";
 
+export const dynamic = "force-static";
+
 export default function Home() {
   const posts = getAllPosts();
 

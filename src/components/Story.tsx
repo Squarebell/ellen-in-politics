@@ -9,22 +9,29 @@ gsap.registerPlugin(ScrollTrigger);
 
 const beats = [
   {
-    title: "Civic life",
-    body: "Showing up beyond election day — attention as a practice, not a performance.",
+    title: "Civic Engagement",
+    body: "Democracy works best when citizens are informed, engaged, and active participants in civic life.",
     image:
       "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1800&q=80",
     alt: "US Capitol dome",
   },
   {
-    title: "Equality",
-    body: "Who gets heard, hired, believed — and who still waits outside the room.",
+    title: "Political Moderation",
+    body: "Practical solutions often come from the center. In a time of deep political polarization, Ellen advocates for evidence-based policymaking and thoughtful compromise.",
+    image:
+      "https://images.unsplash.com/photo-1555848962-6e79363ec58f?auto=format&fit=crop&w=1800&q=80",
+    alt: "Steps of a government building",
+  },
+  {
+    title: "Gender Equality",
+    body: "Feminist forward. Ellen is committed to advocating for women's equality and educating others about the ways patriarchal systems continue to shape our society and everyday lives.",
     image:
       "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1800&q=80",
     alt: "American flag detail",
   },
   {
-    title: "The District",
-    body: "Washington as classroom — monuments, metro light, and the unglamorous work of staying informed.",
+    title: "Patriotism",
+    body: "Patriotism means loving your country enough to help it improve. Ellen believes in America's promise and its potential, while recognizing that acknowledging our shortcomings is essential to building a stronger and more just nation. Love of country includes celebrating its achievements, learning from its history, and working toward a more perfect union.",
     image:
       "https://images.unsplash.com/photo-1555881403-64995e62269b?auto=format&fit=crop&w=1800&q=80",
     alt: "Washington Monument at dusk",
@@ -144,18 +151,18 @@ export function Story() {
             Focus · Scroll
           </p>
 
-          <div className="relative min-h-[12rem] md:min-h-[14rem]">
+          <div className="relative min-h-[14rem] md:min-h-[18rem]">
             {beats.map((beat) => (
               <div key={beat.title} className="absolute inset-x-0 top-0">
                 <h2
                   data-story-title
-                  className="font-display max-w-[12ch] text-[clamp(3rem,8vw,5.5rem)] font-medium leading-[0.95] tracking-[-0.03em] text-white"
+                  className="font-display max-w-[18ch] text-[clamp(2.6rem,7vw,4.75rem)] font-medium leading-[0.95] tracking-[-0.03em] text-white"
                 >
                   {beat.title}
                 </h2>
                 <p
                   data-story-body
-                  className="mt-5 max-w-md text-[16px] leading-relaxed text-white/70 md:text-[18px]"
+                  className="mt-5 max-w-xl text-[16px] leading-relaxed text-white/70 md:text-[18px]"
                 >
                   {beat.body}
                 </p>

@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { formatPostDate, getAllPosts, getPostBySlug } from "@/lib/posts";
 
+export const dynamic = "force-static";
+
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
