@@ -36,11 +36,42 @@ ROOT = Path(__file__).resolve().parent.parent
 VIDEOS_DIR = ROOT / "content" / "videos"
 PUBLIC_DIR = ROOT / "public"
 CAPTIONS_DIR = PUBLIC_DIR / "uploads" / "captions"
+MISPLACED_VIDEOS_DIR = VIDEOS_DIR / "public" / "uploads" / "videos"
 VOCAB_FILE = ROOT / "scripts" / "transcribe-vocab.txt"
+
+VIDEO_EXTENSIONS = {".mov", ".mp4", ".webm", ".m4v"}
 
 MODEL_NAME = os.environ.get("WHISPER_MODEL", "large-v2")
 COMPUTE_TYPE = os.environ.get("WHISPER_COMPUTE", "float32")
 LANGUAGE = os.environ.get("WHISPER_LANGUAGE", "en")
+
+
+def basename_from_path(path_str: str) -> str:
+    return Path(path_str.split("?")[0]).name
+
+
+def resolve_video_path(slug: str, video_ref: str) -> Path | None:
+    """Find the video file, preferring processed mp4 and checking misplaced uploads."""
+    if not video_ref or video_ref.startswith("http"):
+        return None
+
+    candidates = [
+        PUBLIC_DIR / video_ref.lstrip("/"),
+        PUBLIC_DIR / "uploads" / "videos" / f"{slug}.mp4",
+        MISPLACED_VIDEOS_DIR / basename_from_path(video_ref),
+        PUBLIC_DIR / "uploads" / "videos" / basename_from_path(video_ref),
+        PUBLIC_DIR / "uploads" / basename_from_path(video_ref),
+    ]
+
+    seen: set[Path] = set()
+    for candidate in candidates:
+        resolved = candidate.resolve()
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        if candidate.is_file():
+            return candidate
+    return None
 
 
 def read_frontmatter_value(text: str, key: str) -> str | None:
@@ -153,9 +184,9 @@ def main() -> int:
         if captions_exists and not force:
             continue
 
-        video_path = PUBLIC_DIR / video.lstrip("/")
-        if not video_path.exists():
-            print(f"skip {md_file.name}: video file not found at {video_path}")
+        video_path = resolve_video_path(md_file.stem, video)
+        if not video_path:
+            print(f"skip {md_file.name}: video file not found for {video}")
             continue
 
         pending.append((md_file, text, video_path))

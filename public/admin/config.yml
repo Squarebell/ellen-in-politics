@@ -52,9 +52,9 @@ collections:
         widget: image
         required: false
         choose_url: true
-        media_folder: public/uploads/covers
+        media_folder: /public/uploads/covers
         public_folder: /uploads/covers
-        hint: "Click to upload a photo from your computer, or use “Insert from URL” to paste a link. This is the big image at the top of the post."
+        hint: "Click to upload a photo from your computer (iPhone HEIC works — converted to JPG automatically), or use “Insert from URL” to paste a link. This is the big image at the top of the post."
       - label: Cover image description
         name: imageAlt
         widget: string
@@ -63,7 +63,7 @@ collections:
       - label: Body
         name: body
         widget: markdown
-        media_folder: public/uploads/posts
+        media_folder: /public/uploads/posts
         public_folder: /uploads/posts
         hint: "Write your post here. Use the + button in the toolbar (or drag & drop) to add images right inside the text. The pane on the right shows how the post will look on the site."
 
@@ -100,7 +100,8 @@ collections:
       - label: Duration label
         name: durationLabel
         widget: string
-        hint: "Shown under the title, e.g. 1:30"
+        required: false
+        hint: "Optional — auto-filled from the video after upload (e.g. 1:30)"
       - label: Orientation
         name: orientation
         widget: select
@@ -112,20 +113,20 @@ collections:
       - label: Video file
         name: video
         widget: file
-        media_folder: public/uploads/videos
+        media_folder: /public/uploads/videos
         public_folder: /uploads/videos
-        hint: "Upload an .mp4 (keep under ~95MB for GitHub)"
+        hint: "Upload from iPhone (.mov) or .mp4 — keep under ~95MB for GitHub. Poster, duration, captions, and transcript are auto-generated after publish."
       - label: Poster image
         name: poster
         widget: image
-        media_folder: public/uploads/posters
+        media_folder: /public/uploads/posters
         public_folder: /uploads/posters
         required: false
-        hint: "Thumbnail shown before play / in the gallery"
+        hint: "Optional — auto-generated from the video if left empty. iPhone HEIC/HEIF photos are converted to JPG automatically."
       - label: Captions (CC)
         name: captions
         widget: file
-        media_folder: public/uploads/captions
+        media_folder: /public/uploads/captions
         public_folder: /uploads/captions
         required: false
         hint: "Optional — leave empty and captions are auto-generated a few minutes after you publish. Upload a .vtt here only to use your own."

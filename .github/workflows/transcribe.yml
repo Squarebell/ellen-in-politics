@@ -10,7 +10,12 @@ on:
       - main
     paths:
       - "content/videos/**"
+      - "content/videos/public/**"
+      - "content/posts/**"
       - "public/uploads/videos/**"
+      - "public/uploads/posters/**"
+      - "public/uploads/covers/**"
+      - "public/uploads/posts/**"
       - "public/videos/**"
   workflow_dispatch:
 
@@ -45,6 +50,15 @@ jobs:
           path: ~/.cache/huggingface
           key: whisper-large-v2
 
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Process uploaded videos (mov→mp4, posters, duration)
+        run: python3 scripts/process_videos.py
+
+      - name: Process uploaded images (HEIC→JPG for posts)
+        run: python3 scripts/process_media.py
+
       - name: Install faster-whisper
         run: pip install faster-whisper
 
@@ -61,8 +75,8 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/uploads/captions content/videos
-          git commit -m "Add auto-generated captions [auto-captions]"
+          git add public/uploads/captions public/uploads/videos public/uploads/posters public/uploads/covers public/uploads/posts content/videos content/posts
+          git commit -m "Process videos and add auto-generated captions [auto-captions]"
           git push origin main
           # Pushes made with GITHUB_TOKEN don't fire the deploy workflow on
           # their own, so kick it off explicitly.

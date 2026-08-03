@@ -71,6 +71,58 @@ function resolvePublicPath(filePath) {
   return filePath.startsWith("/") ? filePath : `/${filePath}`;
 }
 
+function basenameFromPath(filePath) {
+  return path.basename(String(filePath).split("?")[0]);
+}
+
+function normalizeDurationLabel(label) {
+  if (label == null || label === "") return "";
+  // YAML may parse "1:24" as sexagesimal (84) — recover when possible
+  if (typeof label === "number" && Number.isFinite(label) && label >= 60) {
+    const minutes = Math.floor(label / 60);
+    const seconds = label % 60;
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+  }
+  const text = String(label).trim();
+  const cleaned = text.replace(/\s+/g, "");
+  const match = cleaned.match(/^(\d+):(\d{1,2})$/);
+  if (match) {
+    return `${Number(match[1])}:${match[2].padStart(2, "0")}`;
+  }
+  return text;
+}
+
+function resolveVideoPath(slug, videoRef) {
+  if (!videoRef || /^https?:\/\//i.test(videoRef)) return videoRef;
+
+  const misplacedDir = path.join(
+    root,
+    "content",
+    "videos",
+    "public",
+    "uploads",
+    "videos",
+  );
+  const candidates = [
+    path.join(publicRoot, videoRef.replace(/^\//, "")),
+    path.join(publicRoot, "uploads", "videos", `${slug}.mp4`),
+    path.join(misplacedDir, basenameFromPath(videoRef)),
+    path.join(publicRoot, "uploads", "videos", basenameFromPath(videoRef)),
+    path.join(publicRoot, "uploads", basenameFromPath(videoRef)),
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      if (candidate.includes(`${path.sep}uploads${path.sep}videos${path.sep}${slug}.mp4`)) {
+        return `/uploads/videos/${slug}.mp4`;
+      }
+      return resolvePublicPath(videoRef);
+    }
+  }
+
+  return resolvePublicPath(videoRef);
+}
+
 function formatDate(value) {
   if (!value) return "";
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
@@ -131,12 +183,12 @@ const videos = fs
       eyebrow: String(data.eyebrow ?? "Watch"),
       description: String(data.description ?? ""),
       date: formatDate(data.date),
-      src: resolvePublicPath(data.video) ?? "",
+      src: resolveVideoPath(slug, data.video) ?? "",
       poster:
         resolvePublicPath(data.poster) ??
         "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1200&q=80",
       captionsSrc,
-      durationLabel: String(data.durationLabel ?? ""),
+      durationLabel: normalizeDurationLabel(data.durationLabel ?? ""),
       orientation: data.orientation === "landscape" ? "landscape" : "portrait",
       instagramUrl: data.instagramUrl
         ? String(data.instagramUrl)

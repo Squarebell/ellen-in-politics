@@ -18,6 +18,21 @@ type VideoPlayerProps = {
   video?: VideoFeature;
 };
 
+function videoMimeType(src: string): string {
+  const ext = src.split("?")[0].split(".").pop()?.toLowerCase();
+  switch (ext) {
+    case "mov":
+      return "video/quicktime";
+    case "webm":
+      return "video/webm";
+    case "m4v":
+      return "video/x-m4v";
+    case "mp4":
+    default:
+      return "video/mp4";
+  }
+}
+
 export function VideoPlayer({ video = featuredVideo }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [captionsOn, setCaptionsOn] = useState(false);
@@ -123,7 +138,7 @@ export function VideoPlayer({ video = featuredVideo }: VideoPlayerProps) {
             playsInline
             preload="metadata"
           >
-            <source src={video.src} type="video/mp4" />
+            <source src={video.src} type={videoMimeType(video.src)} />
             {video.captionsSrc ? (
               <track
                 kind="captions"
