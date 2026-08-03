@@ -47,14 +47,17 @@ collections:
         widget: select
         options: ["Civic", "Feminism", "Democracy", "Career", "Policy"]
         default: "Civic"
-      - label: Cover image
+      - label: Cover photo
         name: image
-        widget: image
+        widget: cover-frame
         required: false
         choose_url: true
+        aspect: "16 / 10"
+        frame_label: Cover frame
+        empty_hint: Drag a cover photo onto this frame
         media_folder: /public/uploads/covers
         public_folder: /uploads/covers
-        hint: "Upload a photo from your iPhone (.jpg, .heic, .png) or paste a link. HEIC is converted automatically after you publish."
+        hint: "Drag a photo onto the frame (or upload / paste a link). The right pane shows how the writing post will look on the site. HEIC converts automatically after you publish."
       - label: Cover image description
         name: imageAlt
         widget: string
@@ -109,21 +112,27 @@ collections:
           - portrait
           - landscape
         default: portrait
-        hint: "portrait = Instagram reel (9:16), landscape = widescreen"
+        hint: "portrait = Instagram reel (9:16), landscape = widescreen — the cover frame below matches this shape"
+      - label: Poster / cover frame
+        name: poster
+        widget: cover-frame
+        media_folder: /public/uploads/posters
+        public_folder: /uploads/posters
+        required: false
+        choose_url: true
+        aspect_from: orientation
+        aspect_portrait: "9 / 16"
+        aspect_landscape: "16 / 9"
+        frame_label: Video poster frame
+        empty_hint: Drag a poster photo onto this frame
+        hint: "Optional — drag a photo onto the frame to set the cover. A thumbnail is also grabbed from the video automatically after publish. The right pane previews the Watch page."
       - label: Video file
         name: video
         widget: file
         # Leading slash = repo root. Without it Decap saves under content/videos/.
         media_folder: /public/uploads/videos
         public_folder: /uploads/videos
-        hint: "Upload from your iPhone (.mov or .mp4, under ~95MB). Everything else — thumbnail, duration, captions — is automatic."
-      - label: Poster image
-        name: poster
-        widget: image
-        media_folder: /public/uploads/posters
-        public_folder: /uploads/posters
-        required: false
-        hint: "Optional — a thumbnail is grabbed from the video automatically. Upload one (.jpg or .heic) only to override."
+        hint: "Upload from your iPhone (.mov or .mp4, under ~95MB). Duration and captions fill in automatically. Check the right pane to preview the Watch post."
       - label: Captions (CC)
         name: captions
         widget: file

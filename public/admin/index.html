@@ -6,6 +6,9 @@
     <meta name="robots" content="noindex" />
     <title>Ellen Carty — Content Admin</title>
     <link rel="preconnect" href="https://unpkg.com" />
+    <!-- Absolute path so /admin (no trailing slash) still finds config.yml -->
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+    <link rel="stylesheet" href="/admin/preview.css" />
     <style>
       html,
       body {
@@ -21,84 +24,7 @@
   <body>
     <!-- Decap CMS — loads config from /admin/config.yml -->
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-    <!-- Live "how it will look on the site" preview for Writing posts -->
-    <script>
-      CMS.registerPreviewStyle(
-        "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Outfit:wght@300;400;500;600&display=swap"
-      );
-      CMS.registerPreviewStyle("/admin/preview.css");
-
-      var PostPreview = createClass({
-        render: function () {
-          var entry = this.props.entry;
-          var getAsset = this.props.getAsset;
-
-          var title = entry.getIn(["data", "title"]) || "Untitled post";
-          var topic = entry.getIn(["data", "topic"]) || "Civic";
-          var date = entry.getIn(["data", "date"]);
-          var image = entry.getIn(["data", "image"]);
-          var imageAlt = entry.getIn(["data", "imageAlt"]) || title;
-
-          var dateLabel = "";
-          if (date) {
-            var parsed = new Date(date);
-            if (!isNaN(parsed.getTime())) {
-              dateLabel = parsed.toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-                timeZone: "UTC",
-              });
-            }
-          }
-
-          var coverSrc = "";
-          if (image) {
-            var asset = getAsset(image);
-            coverSrc = asset ? asset.toString() : String(image);
-          }
-
-          return h(
-            "div",
-            { className: "site-preview" },
-            h(
-              "header",
-              { className: "site-preview__header" },
-              h("span", { className: "site-preview__brand" }, "Ellen Carty"),
-              h("span", { className: "site-preview__nav" }, "ALL WRITING")
-            ),
-            h(
-              "article",
-              { className: "site-preview__article" },
-              h("p", { className: "site-preview__topic" }, topic),
-              h("h1", { className: "site-preview__title" }, title),
-              dateLabel
-                ? h("time", { className: "site-preview__date" }, dateLabel)
-                : null,
-              coverSrc
-                ? h(
-                    "div",
-                    { className: "site-preview__media" },
-                    h("img", { src: coverSrc, alt: imageAlt })
-                  )
-                : null,
-              h(
-                "div",
-                { className: "site-preview__body" },
-                this.props.widgetFor("body")
-              ),
-              h(
-                "div",
-                { className: "site-preview__footer" },
-                "Reach out about this piece \u2192"
-              )
-            )
-          );
-        },
-      });
-
-      CMS.registerPreviewTemplate("posts", PostPreview);
-    </script>
+    <!-- Cover-frame widget + live Writing/Watch previews -->
+    <script src="/admin/cms.js"></script>
   </body>
 </html>
