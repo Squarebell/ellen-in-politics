@@ -6,6 +6,7 @@ date: 2026-07-18
 durationLabel: "1:29"
 orientation: portrait
 video: /videos/ellen/reel-02.mp4
+captions: /uploads/captions/trump-admin-womens-healthcare.vtt
 poster: /videos/ellen/reel-02-poster.jpg
 instagramUrl: https://www.instagram.com/elleninpolitics/
 ---

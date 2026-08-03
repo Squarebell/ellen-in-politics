@@ -6,6 +6,7 @@ date: 2026-07-12
 durationLabel: "1:07"
 orientation: portrait
 video: /videos/ellen/reel-04.mp4
+captions: /uploads/captions/why-we-still-need-feminism.vtt
 poster: /videos/ellen/reel-04-poster.jpg
 instagramUrl: https://www.instagram.com/elleninpolitics/
 ---
