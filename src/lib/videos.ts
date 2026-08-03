@@ -37,11 +37,19 @@ export function getAllVideos(): VideoFeature[] {
   return videos;
 }
 
+/** Newest publish date wins if more than one video is marked featured. */
 export function getFeaturedVideo(
   list: VideoFeature[] = videos,
 ): VideoFeature | undefined {
   if (!list.length) return undefined;
-  return list.find((video) => video.featured) ?? list[0];
+  const featured = list.filter((video) => video.featured);
+  if (!featured.length) return list[0];
+  return [...featured].sort((a, b) => {
+    const aTime = a.date ? new Date(a.date).getTime() : 0;
+    const bTime = b.date ? new Date(b.date).getTime() : 0;
+    if (bTime !== aTime) return bTime - aTime;
+    return a.slug.localeCompare(b.slug);
+  })[0];
 }
 
 export const featuredVideo = getFeaturedVideo();

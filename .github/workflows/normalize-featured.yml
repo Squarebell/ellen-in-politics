@@ -1,0 +1,60 @@
+name: Normalize featured homepage pins
+
+# When more than one Writing post or Watch video is marked featured,
+# keep the newest by date and clear the rest in markdown so the CMS
+# stays in sync with the homepage.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "content/posts/**"
+      - "content/videos/**"
+  workflow_dispatch:
+
+concurrency:
+  group: normalize-featured
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: >-
+      ${{ !contains(github.event.head_commit.message, '[auto-featured]')
+      && !contains(github.event.head_commit.message, '[auto-captions]') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Normalize featured flags
+        run: npm run normalize:featured
+
+      - name: Commit cleared featured flags
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- content/posts content/videos; then
+            echo "No featured flags to clear."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/posts content/videos
+          git commit -m "Keep a single homepage featured item [auto-featured]"
+          git push origin main

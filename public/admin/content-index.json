@@ -1,11 +1,12 @@
 {
-  "generatedAt": "2026-08-03T23:18:23.502Z",
+  "generatedAt": "2026-08-03T23:55:51.714Z",
   "topics": [
     "Career",
     "Civic",
     "Connection",
     "Democracy",
     "Feminism",
+    "International Relations ",
     "Policy"
   ],
   "series": [],
@@ -13,9 +14,9 @@
     {
       "slug": "reach-out-before-you-burn-out",
       "title": "Escalations In the Middle East ",
-      "topic": "Connection",
-      "featured": false,
-      "draft": false,
+      "topic": "International Relations ",
+      "featured": true,
+      "draft": true,
       "image": "https://www.americancraftbeer.com/wp-content/uploads/2026/08/Depositphotos_156561592_S-1-Iran-war-bing-2.jpg",
       "ogImage": "",
       "date": "2026-03-02"

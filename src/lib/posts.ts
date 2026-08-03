@@ -32,9 +32,16 @@ export function getHomepagePosts(): Post[] {
   return posts.filter((post) => post.homepage !== false);
 }
 
+/** Newest publish date wins if more than one post is marked featured. */
 export function getFeaturedPost(list: Post[] = getHomepagePosts()): Post | null {
   if (!list.length) return null;
-  return list.find((post) => post.featured) ?? list[0];
+  const featured = list.filter((post) => post.featured);
+  if (!featured.length) return list[0];
+  return [...featured].sort((a, b) => {
+    const byDate = new Date(b.date).getTime() - new Date(a.date).getTime();
+    if (byDate !== 0) return byDate;
+    return a.slug.localeCompare(b.slug);
+  })[0];
 }
 
 export function getPostBySlug(slug: string): Post | null {

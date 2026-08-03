@@ -63,6 +63,7 @@ collections:
         default: false
         kind: posts
         toggle_label: Featured on homepage
+        hint: "Pins the large Writing card. If another post is also featured, the newest by date wins and older pins clear after publish."
       - label: Show on homepage
         name: homepage
         widget: boolean
@@ -197,6 +198,7 @@ collections:
         default: false
         kind: videos
         toggle_label: Featured on homepage
+        hint: "Pins the homepage Watch clip. If another video is also featured, the newest by date wins and older pins clear after publish."
       - label: Sort order
         name: sortOrder
         widget: number
