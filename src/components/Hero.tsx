@@ -70,15 +70,15 @@ export function Hero() {
     >
       <div ref={mediaRef} className="absolute inset-0 will-change-transform">
         <Image
-          src="https://images.unsplash.com/photo-1543372654-b45dd90eeee5?auto=format&fit=crop&w=2400&q=80"
-          alt="The United States Capitol lit up at night"
+          src="/ellen/hero-capitol.jpg"
+          alt="The United States Capitol on a clear day"
           fill
           priority
-          className="object-cover object-[center_60%]"
+          className="object-cover object-[center_45%]"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent" />
       </div>
 
       <div
@@ -89,7 +89,7 @@ export function Hero() {
           data-hero-line
           className="mb-6 text-[11px] font-medium tracking-[0.22em] text-white/55 uppercase"
         >
-          Politics · Commentary · Washington, D.C.
+          Advocate. Student. Creator.
         </p>
 
         <h1
@@ -98,23 +98,24 @@ export function Hero() {
         >
           Ellen
           <span className="mt-1 block font-normal italic text-white/90">
-            in Politics
+            In Politics
           </span>
         </h1>
 
         <p
           data-hero-line
-          className="mt-8 text-[17px] tracking-[0.02em] text-white/80 md:text-[20px]"
+          className="mt-8 max-w-2xl text-[17px] leading-relaxed tracking-[0.02em] text-white/80 md:text-[20px]"
         >
-          Advocate. Student. Creator. American.
+          Exploring politics, policy, and civic engagement through the eyes of
+          the next generation.
         </p>
 
         <div data-hero-line className="mt-10 flex flex-wrap items-center gap-3">
-          <a href="#work" className="btn-apple btn-apple-on-dark">
-            Selected writing
-          </a>
-          <a href="#about" className="btn-apple btn-apple-ghost-on-dark">
+          <a href="#about" className="btn-apple btn-apple-on-dark">
             About Ellen
+          </a>
+          <a href="#values" className="btn-apple btn-apple-ghost-on-dark">
+            Values
           </a>
         </div>
       </div>

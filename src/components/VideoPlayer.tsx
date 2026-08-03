@@ -17,9 +17,14 @@ import {
 
 type VideoPlayerProps = {
   video?: VideoFeature;
+  /** CSS length capping a portrait reel's height, e.g. on the home page teaser. */
+  portraitHeight?: string;
 };
 
-export function VideoPlayer({ video = featuredVideo }: VideoPlayerProps) {
+export function VideoPlayer({
+  video = featuredVideo,
+  portraitHeight = "min(82vh, 920px)",
+}: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [captionsOn, setCaptionsOn] = useState(false);
   const [transcriptOpen, setTranscriptOpen] = useState(false);
@@ -106,16 +111,18 @@ export function VideoPlayer({ video = featuredVideo }: VideoPlayerProps) {
         <div
           className={
             isPortrait
-              ? "relative flex min-h-[min(82vh,920px)] items-center justify-center bg-black"
+              ? "relative flex items-center justify-center bg-black"
               : "relative aspect-video bg-black"
           }
+          style={isPortrait ? { minHeight: portraitHeight } : undefined}
         >
           <div
             className={
               isPortrait
-                ? "relative aspect-[9/16] h-[min(82vh,920px)] w-auto max-w-full"
+                ? "relative aspect-[9/16] w-auto max-w-full"
                 : "absolute inset-0"
             }
+            style={isPortrait ? { height: portraitHeight } : undefined}
           >
           <video
             ref={videoRef}

@@ -118,7 +118,7 @@ export function Story() {
 
   return (
     <section
-      id="story"
+      id="values"
       ref={rootRef}
       className="relative bg-surface-dark"
       style={{ height: `${beats.length * 100}vh` }}
@@ -153,7 +153,7 @@ export function Story() {
 
         <div className="relative z-10 mx-auto flex w-full max-w-[1180px] flex-col px-6 pb-16 pt-28 md:px-10 md:pb-24">
           <p className="mb-5 text-[11px] font-medium tracking-[0.22em] text-white/50 uppercase">
-            Focus · Scroll
+            Values · Scroll
           </p>
 
           <div className="relative min-h-[14rem] md:min-h-[18rem]">

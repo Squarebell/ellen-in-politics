@@ -5,9 +5,10 @@
   --surface-elevated: #ffffff;
   --surface-dark: #0c0c0c;
   --surface-dark-soft: #1a1a1a;
-  --ink: #111111;
-  --ink-soft: #3a3a3a;
-  --muted: #6b6b6b;
+  --surface-navy: #061018;
+  --ink: #001f3f;
+  --ink-soft: #2a4560;
+  --muted: #67717f;
   --denim: #2f4a6a;
   --denim-soft: #5a7494;
   --gold: #9a7b3c;
@@ -15,11 +16,11 @@
   --flag: #9e2b2b;
   --paper: #f7f6f3;
   --link: #2f4a6a;
-  --rule: rgba(17, 17, 17, 0.12);
+  --rule: rgba(0, 31, 63, 0.14);
 
   --marble: var(--surface);
   --marble-deep: #ebe8e2;
-  --ink-navy: #1a2e45;
+  --ink-navy: var(--ink);
 
   --background: var(--surface);
   --foreground: var(--ink);
@@ -37,6 +38,7 @@
   --color-surface-elevated: var(--surface-elevated);
   --color-surface-dark: var(--surface-dark);
   --color-surface-dark-soft: var(--surface-dark-soft);
+  --color-surface-navy: var(--surface-navy);
   --color-marble: var(--marble);
   --color-marble-deep: var(--marble-deep);
   --color-ink: var(--ink);
