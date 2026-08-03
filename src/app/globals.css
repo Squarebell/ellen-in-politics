@@ -190,6 +190,114 @@ body {
   font-weight: 600;
 }
 
+/* Full post body (markdown from the CMS).
+   Keep in sync with public/admin/preview.css so the editor preview matches. */
+.prose-ellen-body {
+  font-size: 1.175rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  letter-spacing: -0.01em;
+}
+
+.prose-ellen-body p {
+  margin-bottom: 1.4rem;
+}
+
+.prose-ellen-body > :last-child {
+  margin-bottom: 0;
+}
+
+.prose-ellen-body strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.prose-ellen-body a {
+  color: var(--denim);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.prose-ellen-body a:hover {
+  color: var(--denim-soft);
+}
+
+.prose-ellen-body h1,
+.prose-ellen-body h2,
+.prose-ellen-body h3,
+.prose-ellen-body h4 {
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.15;
+  margin: 2.6rem 0 1.1rem;
+}
+
+.prose-ellen-body h1 {
+  font-size: 2.1rem;
+}
+
+.prose-ellen-body h2 {
+  font-size: 1.9rem;
+}
+
+.prose-ellen-body h3 {
+  font-size: 1.55rem;
+}
+
+.prose-ellen-body h4 {
+  font-size: 1.3rem;
+}
+
+.prose-ellen-body ul,
+.prose-ellen-body ol {
+  margin-bottom: 1.4rem;
+  padding-left: 1.4rem;
+}
+
+.prose-ellen-body ul {
+  list-style: disc;
+}
+
+.prose-ellen-body ol {
+  list-style: decimal;
+}
+
+.prose-ellen-body li {
+  margin-bottom: 0.5rem;
+}
+
+.prose-ellen-body blockquote {
+  margin: 2rem 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--denim);
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  line-height: 1.5;
+}
+
+.prose-ellen-body blockquote p {
+  margin-bottom: 0.75rem;
+}
+
+.prose-ellen-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-media);
+  margin: 2.25rem 0;
+}
+
+.prose-ellen-body hr {
+  border: 0;
+  height: 1px;
+  background: var(--rule);
+  margin: 2.5rem 0;
+}
+
 /* Native closed captions — editorial, readable */
 video::cue {
   background: rgba(0, 0, 0, 0.55);

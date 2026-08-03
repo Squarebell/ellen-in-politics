@@ -3,7 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
-import { formatPostDate, getAllPosts, getPostBySlug } from "@/lib/posts";
+import { PostBody } from "@/components/PostBody";
+import {
+  canOptimizeImage,
+  formatPostDate,
+  getAllPosts,
+  getPostBySlug,
+} from "@/lib/posts";
 
 export const dynamic = "force-static";
 
@@ -25,22 +31,6 @@ export async function generateMetadata({
     title: post.title,
     description: post.excerpt,
   };
-}
-
-function renderParagraphs(content: string) {
-  return content.split(/\n\n+/).map((block, index) => {
-    const html = block
-      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\*(.+?)\*/g, "<em>$1</em>");
-
-    return (
-      <p
-        key={index}
-        className="prose-ellen"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    );
-  });
 }
 
 export default async function PostPage({ params }: PageProps) {
@@ -91,13 +81,14 @@ export default async function PostPage({ params }: PageProps) {
               alt={post.imageAlt}
               fill
               priority
+              unoptimized={!canOptimizeImage(post.image)}
               className="object-cover"
               sizes="(max-width: 760px) 100vw, 760px"
             />
           </div>
 
-          <div className="mt-12 space-y-1 border-t border-rule pt-10">
-            {renderParagraphs(post.content)}
+          <div className="mt-12 border-t border-rule pt-10">
+            <PostBody content={post.content} />
           </div>
 
           <div className="mt-16 border-t border-rule pt-8">

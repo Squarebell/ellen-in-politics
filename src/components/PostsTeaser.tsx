@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatPostDate, type Post } from "@/lib/posts";
+import { canOptimizeImage, formatPostDate, type Post } from "@/lib/posts";
 import { socials } from "@/lib/socials";
 import { Reveal } from "./Reveal";
 
@@ -49,6 +49,7 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
                   src={featured.image}
                   alt={featured.imageAlt}
                   fill
+                  unoptimized={!canOptimizeImage(featured.image)}
                   className="object-cover transition duration-[800ms] ease-out group-hover:scale-[1.025]"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   priority
