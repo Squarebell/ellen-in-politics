@@ -8,6 +8,7 @@ date: 2026-08-03
 durationLabel: "1:24"
 orientation: portrait
 video: /uploads/videos/changing-the-discussion-surrounding-mens-mental-health.mp4
+captions: /uploads/captions/changing-the-discussion-surrounding-mens-mental-health.vtt
 poster: /uploads/posters/changing-the-discussion-surrounding-mens-mental-health.jpg
 instagramUrl: https://www.instagram.com/elleninpolitics/
 ---
