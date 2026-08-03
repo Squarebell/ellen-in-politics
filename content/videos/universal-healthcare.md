@@ -6,6 +6,7 @@ date: 2026-07-10
 durationLabel: "1:34"
 orientation: portrait
 video: /videos/ellen/reel-05.mp4
+captions: /uploads/captions/universal-healthcare.vtt
 poster: /videos/ellen/reel-05-poster.jpg
 instagramUrl: https://www.instagram.com/elleninpolitics/
 ---

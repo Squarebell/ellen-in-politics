@@ -98,7 +98,7 @@ collections:
         media_folder: public/uploads/captions
         public_folder: /uploads/captions
         required: false
-        hint: "Upload a .vtt WebVTT captions file. Also used to build the on-page transcript if you don't add timed lines below."
+        hint: "Optional — leave empty and captions are auto-generated a few minutes after you publish. Upload a .vtt here only to use your own."
       - label: Instagram URL
         name: instagramUrl
         widget: string
@@ -108,7 +108,7 @@ collections:
         name: transcript
         widget: list
         required: false
-        hint: "Optional. Leave empty to auto-build from the captions .vtt file. Use this to override or add timed lines."
+        hint: "Optional. Leave empty — the transcript builds itself from the (auto-generated) captions. Use this only to correct or override lines."
         summary: "{{start}}s-{{end}}s {{text}}"
         fields:
           - label: Start (seconds)
