@@ -57,7 +57,7 @@ export default {
       const privateRepo =
         env.GITHUB_REPO_PRIVATE === "true" || env.GITHUB_REPO_PRIVATE === "1";
       const scope = privateRepo ? "repo user" : "public_repo user";
-      const redirectUri = `${url.origin}/callback?provider=github`;
+      const redirectUri = `${url.origin}/callback`;
 
       const authUrl = new URL("https://github.com/login/oauth/authorize");
       authUrl.searchParams.set("client_id", env.GITHUB_CLIENT_ID);
@@ -69,9 +69,6 @@ export default {
     }
 
     if (url.pathname === "/callback") {
-      if (url.searchParams.get("provider") !== "github") {
-        return new Response("Invalid provider", { status: 400 });
-      }
       const code = url.searchParams.get("code");
       if (!code) {
         return new Response("Missing code", { status: 400 });
@@ -80,7 +77,7 @@ export default {
         return new Response("OAuth secrets not configured", { status: 500 });
       }
 
-      const redirectUri = `${url.origin}/callback?provider=github`;
+      const redirectUri = `${url.origin}/callback`;
       const tokenRes = await fetch(
         "https://github.com/login/oauth/access_token",
         {
