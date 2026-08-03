@@ -20,7 +20,7 @@ type VideoPlayerProps = {
 
 export function VideoPlayer({ video = featuredVideo }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [captionsOn, setCaptionsOn] = useState(true);
+  const [captionsOn, setCaptionsOn] = useState(false);
   const [transcriptOpen, setTranscriptOpen] = useState(false);
   const [activeCue, setActiveCue] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -130,7 +130,6 @@ export function VideoPlayer({ video = featuredVideo }: VideoPlayerProps) {
                 srcLang="en"
                 label="English"
                 src={video.captionsSrc}
-                default
               />
             ) : null}
           </video>
