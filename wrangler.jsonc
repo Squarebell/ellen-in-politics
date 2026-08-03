@@ -8,6 +8,11 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Enables Cloudflare Images so /_next/image resizes per device instead of
+  // returning the original file. Falls back to the original when unavailable.
+  "images": {
+    "binding": "IMAGES"
+  },
   "observability": {
     "enabled": true
   },
