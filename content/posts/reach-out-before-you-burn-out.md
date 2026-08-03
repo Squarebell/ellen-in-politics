@@ -1,8 +1,11 @@
 ---
+draft: true
+featured: true
+homepage: true
 title: "Escalations In the Middle East "
 excerpt: "A breakdown of what is happening between the U.S. and Iran as of 3/2/26. "
 date: 2026-03-02
-topic: Connection
+topic: "International Relations "
 image: https://www.americancraftbeer.com/wp-content/uploads/2026/08/Depositphotos_156561592_S-1-Iran-war-bing-2.jpg
 imageAlt: ""
 ---
