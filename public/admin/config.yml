@@ -8,10 +8,9 @@ backend:
   base_url: https://ellen-decap-oauth.squarebell.workers.dev
   auth_endpoint: auth
 
-# Update site_url / display_url when custom domain is attached
-site_url: https://ellen-in-politics.squarebell.workers.dev
+site_url: https://elleninpolitics.com
 logo_url: /favicon.ico
-display_url: https://ellen-in-politics.squarebell.workers.dev
+display_url: https://elleninpolitics.com
 search: false
 
 # Uploaded images land in the repo and ship with the next deploy

@@ -10,7 +10,10 @@
   },
   "observability": {
     "enabled": true
-  }
-  // After the domain is on Cloudflare DNS, uncomment and set:
-  // "routes": [{ "pattern": "ellencarty.com", "custom_domain": true }]
+  },
+  // Requires elleninpolitics.com as an active Cloudflare zone (nameservers on Cloudflare).
+  "routes": [
+    { "pattern": "elleninpolitics.com", "custom_domain": true },
+    { "pattern": "www.elleninpolitics.com", "custom_domain": true }
+  ]
 }
