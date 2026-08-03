@@ -1,63 +1,24 @@
-import fs from "fs";
-import path from "path";
 import Image from "next/image";
 import { socials } from "@/lib/socials";
 import { Reveal } from "./Reveal";
 
-const ellenDir = path.join(process.cwd(), "public", "ellen");
-
-function ellenAsset(filename: string) {
-  return fs.existsSync(path.join(ellenDir, filename))
-    ? `/ellen/${filename}`
-    : null;
-}
+/** Local About portrait — committed under public/ellen/ */
+const PORTRAIT_SRC = "/ellen/about-portrait.jpg";
 
 export function About() {
-  const linkedInPortrait =
-    ellenAsset("about-portrait.jpg") ??
-    ellenAsset("linkedin-portrait.jpg") ??
-    ellenAsset("linkedin-portrait.png") ??
-    ellenAsset("linkedin-portrait.webp");
-  const lifestyle =
-    ellenAsset("about-city.jpg") ??
-    ellenAsset("about-lifestyle.jpg") ??
-    ellenAsset("portrait-personal.jpg");
-
   return (
     <section id="about" className="bg-surface-elevated py-24 md:py-36">
       <div className="mx-auto grid max-w-[1180px] items-start gap-12 px-6 md:grid-cols-[0.95fr_1.05fr] md:gap-16 md:px-10 lg:gap-24">
         <Reveal>
           <div className="media-frame relative aspect-[4/5] bg-marble-deep">
-            {linkedInPortrait ? (
-              <Image
-                src={linkedInPortrait}
-                alt="Ellen Carty"
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 768px) 100vw, 45vw"
-                priority
-              />
-            ) : lifestyle ? (
-              <Image
-                src={lifestyle}
-                alt="Ellen Carty"
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 768px) 100vw, 45vw"
-              />
-            ) : (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-marble-deep to-surface px-8 text-center">
-                <p className="font-display text-2xl font-medium text-ink">
-                  Portrait
-                </p>
-                <p className="max-w-xs text-[14px] leading-relaxed text-muted">
-                  Add{" "}
-                  <span className="font-medium text-ink">
-                    public/ellen/linkedin-portrait.jpg
-                  </span>
-                </p>
-              </div>
-            )}
+            <Image
+              src={PORTRAIT_SRC}
+              alt="Ellen Carty"
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 100vw, 45vw"
+              priority
+            />
           </div>
         </Reveal>
 
