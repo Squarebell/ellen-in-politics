@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
-    "prebuild": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
+    "predev": "npm run build:content",
+    "prebuild": "npm run build:content && npm run check:media",
     "build:content": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
+    "check:media": "node scripts/check-media.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

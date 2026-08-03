@@ -11,7 +11,7 @@ backend:
 site_url: https://elleninpolitics.com
 logo_url: /favicon.ico
 display_url: https://elleninpolitics.com
-search: false
+search: true
 
 # Uploaded media lands in the repo and ships with the next deploy
 media_folder: public/uploads
@@ -21,14 +21,64 @@ collections:
   - name: posts
     label: Writing
     label_singular: Post
+    description: >-
+      Checklist before Publish: title, excerpt, date, topic, cover + alt text, and body.
+      Drafts and future “Publish after” dates stay off the live site until ready.
+      Changing the filename/slug breaks old links — keep the slug stable after publish.
+      URL pattern: https://elleninpolitics.com/posts/your-slug
     folder: content/posts
     create: true
     delete: true
     slug: "{{slug}}"
     extension: md
     format: frontmatter
-    sortable_fields: ["date", "title", "topic"]
+    sortable_fields: ["date", "title", "topic", "sortOrder", "featured"]
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+      - label: Featured
+        field: featured
+        pattern: true
     fields:
+      - label: Editorial status
+        name: editorialNote
+        widget: editorial-note
+        required: false
+        notes:
+          - "Draft ON or a future Publish-after date = hidden from the live site."
+          - "Featured pins the large homepage Writing card. Sort order (lower first) curates the list."
+          - "Slug comes from the filename. Renaming after publish breaks shared links."
+          - "SEO title/description/OG image are optional — title, excerpt, and cover are used by default."
+      - label: Draft
+        name: draft
+        widget: boolean
+        default: false
+        hint: "ON = saved in GitHub but not shown on the live site. Use while writing."
+      - label: Publish after
+        name: publishAfter
+        widget: datetime
+        required: false
+        date_format: YYYY-MM-DD
+        time_format: false
+        format: YYYY-MM-DD
+        hint: "Optional. Hide until this date (UTC). Leave empty to publish with the next deploy after you turn Draft off."
+      - label: Featured on homepage
+        name: featured
+        widget: boolean
+        default: false
+        hint: "Pin as the large Writing card on the homepage. Only one should be featured at a time."
+      - label: Show on homepage
+        name: homepage
+        widget: boolean
+        default: true
+        hint: "OFF = keep the post at /posts/slug but hide it from the homepage Writing list."
+      - label: Sort order
+        name: sortOrder
+        widget: number
+        required: false
+        value_type: int
+        hint: "Optional. Lower numbers appear first (after Featured). Leave empty to sort by date."
       - label: Title
         name: title
         widget: string
@@ -44,9 +94,9 @@ collections:
         format: YYYY-MM-DD
       - label: Topic
         name: topic
-        widget: select
-        options: ["Civic", "Feminism", "Democracy", "Career", "Policy"]
+        widget: string
         default: "Civic"
+        hint: "Suggested: Civic, Feminism, Democracy, Career, Policy, Connection — or type your own."
       - label: Cover photo
         name: image
         widget: cover-frame
@@ -57,31 +107,112 @@ collections:
         empty_hint: Drag a cover photo onto this frame
         media_folder: /public/uploads/covers
         public_folder: /uploads/covers
-        hint: "Drag a photo onto the frame (or upload / paste a link). The right pane shows how the writing post will look on the site. HEIC converts automatically after you publish."
+        focus_field: imageFocus
+        hint: "Drag a photo onto the frame (or upload / paste a link). HEIC converts automatically after you publish."
+      - label: Cover focal point
+        name: imageFocus
+        widget: select
+        required: false
+        default: "center"
+        options:
+          - { label: "Center", value: "center" }
+          - { label: "Top", value: "top" }
+          - { label: "Bottom", value: "bottom" }
+          - { label: "Left", value: "left" }
+          - { label: "Right", value: "right" }
+        hint: "Where the cover crops when framed on the site."
       - label: Cover image description
         name: imageAlt
         widget: string
         required: false
-        hint: "A short description of the cover image (helps screen readers and search engines), e.g. “Voters waiting in line outside a polling place”."
+        hint: "A short description of the cover image (helps screen readers and search engines)."
+      - label: SEO title
+        name: seoTitle
+        widget: string
+        required: false
+        hint: "Optional browser/search title. Defaults to the post title."
+      - label: SEO description
+        name: seoDescription
+        widget: text
+        required: false
+        hint: "Optional search/social description. Defaults to the excerpt."
+      - label: Social / OG image
+        name: ogImage
+        widget: image
+        required: false
+        media_folder: /public/uploads/covers
+        public_folder: /uploads/covers
+        hint: "Optional. Defaults to the cover photo when shared on social."
       - label: Body
         name: body
         widget: markdown
         media_folder: /public/uploads/posts
         public_folder: /uploads/posts
-        hint: "Write your post here. Use the + button in the toolbar (or drag & drop) to add images right inside the text. The pane on the right shows how the post will look on the site."
+        hint: "Write your post here. Use the + button (or drag & drop) for inline images. Reading time is calculated automatically."
 
   - name: videos
     label: Watch
     label_singular: Video
+    description: >-
+      Checklist before Publish: title, description, date, orientation, and video file (under ~95MB).
+      After Publish, remux + auto-captions usually take a few minutes — refresh Watch later.
+      Leave Captions empty unless you have your own .vtt. Use Timed transcript to correct Whisper lines.
+      Drafts and future Publish-after dates stay off the live site.
     folder: content/videos
     create: true
     delete: true
     slug: "{{slug}}"
     extension: md
     format: frontmatter
-    sortable_fields: ["date", "title"]
+    sortable_fields: ["date", "title", "sortOrder", "featured", "series"]
     summary: "{{title}} — {{durationLabel}}"
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+      - label: Featured
+        field: featured
+        pattern: true
     fields:
+      - label: Editorial status
+        name: editorialNote
+        widget: editorial-note
+        required: false
+        notes:
+          - "After Publish: video remux, poster, duration, and captions usually finish in a few minutes. Refresh Watch once CI is done."
+          - "Keep video files under ~95MB (.mov or .mp4). Larger files strain GitHub — compress on your phone first."
+          - "Draft ON or a future Publish-after date = hidden from the live site."
+          - "Featured pins the homepage Watch clip. Series groups clips on the Watch page."
+          - "Leave Captions empty for auto-CC. Edit Timed transcript afterward to fix lines."
+      - label: Draft
+        name: draft
+        widget: boolean
+        default: false
+        hint: "ON = saved in GitHub but not shown on the live site."
+      - label: Publish after
+        name: publishAfter
+        widget: datetime
+        required: false
+        date_format: YYYY-MM-DD
+        time_format: false
+        format: YYYY-MM-DD
+        hint: "Optional. Hide until this date (UTC)."
+      - label: Featured on homepage
+        name: featured
+        widget: boolean
+        default: false
+        hint: "Pin as the homepage Watch clip. Only one should be featured at a time."
+      - label: Sort order
+        name: sortOrder
+        widget: number
+        required: false
+        value_type: int
+        hint: "Optional. Lower numbers appear first. Leave empty to sort by date."
+      - label: Series / playlist
+        name: series
+        widget: string
+        required: false
+        hint: "Optional group label, e.g. Midterms, Healthcare, Democracy."
       - label: Title
         name: title
         widget: string
@@ -99,7 +230,7 @@ collections:
         date_format: YYYY-MM-DD
         time_format: false
         format: YYYY-MM-DD
-        hint: "Newest videos show first on the Watch page"
+        hint: "Newest videos show first on the Watch page (unless Sort order is set)"
       - label: Duration label
         name: durationLabel
         widget: string
@@ -125,32 +256,46 @@ collections:
         aspect_landscape: "16 / 9"
         frame_label: Video poster frame
         empty_hint: Drag a poster photo onto this frame
-        hint: "Optional — drag a photo onto the frame to set the cover. A thumbnail is also grabbed from the video automatically after publish. The right pane previews the Watch page."
+        focus_field: posterFocus
+        hint: "Optional — a thumbnail is also grabbed from the video automatically after publish."
+      - label: Poster focal point
+        name: posterFocus
+        widget: select
+        required: false
+        default: "center"
+        options:
+          - { label: "Center", value: "center" }
+          - { label: "Top", value: "top" }
+          - { label: "Bottom", value: "bottom" }
+          - { label: "Left", value: "left" }
+          - { label: "Right", value: "right" }
+        hint: "Where the poster crops in frames on the site."
       - label: Video file
         name: video
-        widget: file
+        widget: video-file
         # Leading slash = repo root. Without it Decap saves under content/videos/.
         media_folder: /public/uploads/videos
         public_folder: /uploads/videos
-        hint: "Upload from your iPhone (.mov or .mp4, under ~95MB). Duration and captions fill in automatically. Check the right pane to preview the Watch post."
+        max_mb: 95
+        hint: "Upload from your iPhone (.mov or .mp4, under ~95MB). Duration and captions fill in automatically after publish."
       - label: Captions (CC)
         name: captions
         widget: file
         media_folder: /public/uploads/captions
         public_folder: /uploads/captions
         required: false
-        hint: "Optional — leave empty and captions are auto-generated a few minutes after you publish. Upload a .vtt here only to use your own."
+        hint: "Optional — leave empty and captions are auto-generated a few minutes after you publish. Upload a .vtt only to use your own."
       - label: Instagram URL
         name: instagramUrl
         widget: string
         required: false
         default: "https://www.instagram.com/elleninpolitics/"
-      - label: Timed transcript
+      - label: Captions review / timed transcript
         name: transcript
         widget: list
         required: false
-        hint: "Optional. Leave empty — the transcript builds itself from the (auto-generated) captions. Use this only to correct or override lines."
-        summary: "{{start}}s-{{end}}s {{text}}"
+        hint: "After auto-captions land, reopen this entry to fix wording. Each cue is start/end seconds + text. Leave empty to use the .vtt as-is."
+        summary: "{{start}}s–{{end}}s · {{text}}"
         fields:
           - label: Start (seconds)
             name: start
