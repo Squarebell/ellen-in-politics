@@ -92,6 +92,9 @@ const posts = fs
       seoTitle: data.seoTitle ? String(data.seoTitle) : "",
       seoDescription: data.seoDescription ? String(data.seoDescription) : "",
       ogImage,
+      related: Array.isArray(data.related)
+        ? data.related.map(String).filter(Boolean)
+        : [],
       readingTimeMinutes: readingTimeMinutes(body),
       _published: isPublished(data, today),
     };
