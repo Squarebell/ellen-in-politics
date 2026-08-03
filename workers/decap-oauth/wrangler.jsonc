@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "ellen-decap-oauth",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+  "workers_dev": true
+  // After custom domain DNS is on Cloudflare, you can attach e.g.:
+  // "routes": [{ "pattern": "cms-auth.YOURDOMAIN.com", "custom_domain": true }]
+}

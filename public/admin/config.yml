@@ -1,0 +1,44 @@
+# Decap CMS — Ellen Carty site
+# Update backend.repo + base_url after GitHub OAuth proxy is live.
+
+backend:
+  name: github
+  repo: OWNER/ellen-in-politics # ← replace OWNER with your GitHub username/org
+  branch: main
+  base_url: https://ellen-decap-oauth.YOUR_SUBDOMAIN.workers.dev # ← OAuth worker URL
+  auth_endpoint: auth
+
+site_url: https://YOUR_CUSTOM_DOMAIN
+logo_url: /favicon.ico
+display_url: https://YOUR_CUSTOM_DOMAIN
+search: false
+
+# Uploaded images land in the repo and ship with the next deploy
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: posts
+    label: Writing
+    label_singular: Post
+    folder: content/posts
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    sortable_fields: ["date", "title", "topic"]
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Excerpt, name: excerpt, widget: text }
+      - { label: Publish date, name: date, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
+      - {
+          label: Topic,
+          name: topic,
+          widget: select,
+          options: ["Civic", "Feminism", "Democracy", "Career", "Policy"],
+          default: "Civic",
+        }
+      - { label: Cover image URL, name: image, widget: string, required: false }
+      - { label: Cover image alt, name: imageAlt, widget: string, required: false }
+      - { label: Body, name: body, widget: markdown }

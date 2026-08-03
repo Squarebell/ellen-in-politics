@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+:root {
+  --surface: #f7f6f3;
+  --surface-elevated: #ffffff;
+  --surface-dark: #0c0c0c;
+  --surface-dark-soft: #1a1a1a;
+  --ink: #111111;
+  --ink-soft: #3a3a3a;
+  --muted: #6b6b6b;
+  --denim: #2f4a6a;
+  --denim-soft: #5a7494;
+  --gold: #9a7b3c;
+  --gold-soft: #c4a35a;
+  --flag: #9e2b2b;
+  --paper: #f7f6f3;
+  --link: #2f4a6a;
+  --rule: rgba(17, 17, 17, 0.12);
+
+  --marble: var(--surface);
+  --marble-deep: #ebe8e2;
+  --ink-navy: #1a2e45;
+
+  --background: var(--surface);
+  --foreground: var(--ink);
+
+  --font-display: var(--font-cormorant);
+  --font-body: var(--font-outfit);
+  --radius-media: 0.35rem;
+  --radius-control: 999px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-dark: var(--surface-dark);
+  --color-surface-dark-soft: var(--surface-dark-soft);
+  --color-marble: var(--marble);
+  --color-marble-deep: var(--marble-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-navy: var(--ink-navy);
+  --color-denim: var(--denim);
+  --color-denim-soft: var(--denim-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-flag: var(--flag);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-link: var(--link);
+  --color-rule: var(--rule);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --radius-media: var(--radius-media);
+  --radius-control: var(--radius-control);
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--denim) 22%, transparent);
+  color: var(--ink);
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.02em;
+  font-feature-settings: "ss01" on, "liga" on;
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rule {
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+}
+
+.btn-apple {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-control);
+  padding: 0.9rem 1.65rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: opacity 0.25s ease, transform 0.2s ease, background 0.25s ease;
+}
+
+.btn-apple:hover {
+  opacity: 0.9;
+}
+
+.btn-apple:active {
+  transform: scale(0.985);
+}
+
+.btn-apple-on-dark {
+  background: #fff;
+  color: var(--ink);
+}
+
+.btn-apple-ghost-on-dark {
+  background: transparent;
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.btn-apple-ghost-on-dark:hover {
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 1;
+}
+
+.btn-editorial {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+.btn-editorial:hover {
+  color: var(--denim);
+}
+
+.media-frame {
+  border-radius: var(--radius-media);
+  overflow: hidden;
+}
+
+.prose-ellen {
+  font-size: 1.175rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  letter-spacing: -0.01em;
+}
+
+.prose-ellen p + p {
+  margin-top: 1.4rem;
+}
+
+.prose-ellen strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Native closed captions — editorial, readable */
+video::cue {
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
