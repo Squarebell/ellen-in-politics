@@ -1,0 +1,120 @@
+{
+  "generatedAt": "2026-08-03T23:18:23.502Z",
+  "topics": [
+    "Career",
+    "Civic",
+    "Connection",
+    "Democracy",
+    "Feminism",
+    "Policy"
+  ],
+  "series": [],
+  "posts": [
+    {
+      "slug": "reach-out-before-you-burn-out",
+      "title": "Escalations In the Middle East ",
+      "topic": "Connection",
+      "featured": false,
+      "draft": false,
+      "image": "https://www.americancraftbeer.com/wp-content/uploads/2026/08/Depositphotos_156561592_S-1-Iran-war-bing-2.jpg",
+      "ogImage": "",
+      "date": "2026-03-02"
+    },
+    {
+      "slug": "the-save-america-act",
+      "title": "The \"Save\" America Act",
+      "topic": "Civic",
+      "featured": false,
+      "draft": false,
+      "image": "https://www.fau.edu/newsdesk/images/news/april2023-poll-image-2.jpg",
+      "ogImage": "",
+      "date": "2026-07-17"
+    }
+  ],
+  "videos": [
+    {
+      "slug": "changing-the-discussion-surrounding-mens-mental-health",
+      "title": "Changing the Discussion Surrounding Men's Mental Health",
+      "series": "",
+      "featured": false,
+      "draft": false,
+      "video": "/uploads/videos/changing-the-discussion-surrounding-mens-mental-health.mp4",
+      "poster": "/uploads/posters/changing-the-discussion-surrounding-mens-mental-health.jpg",
+      "captions": "/uploads/captions/changing-the-discussion-surrounding-mens-mental-health.vtt",
+      "durationLabel": "1:24",
+      "date": "2026-08-03"
+    },
+    {
+      "slug": "election-denialism",
+      "title": "Election denialism & the threat it poses to democracy",
+      "series": "",
+      "featured": false,
+      "draft": false,
+      "video": "/videos/ellen/reel-03.mp4",
+      "poster": "/videos/ellen/reel-03-poster.jpg",
+      "captions": "/uploads/captions/election-denialism.vtt",
+      "durationLabel": "1:10",
+      "date": "2026-07-15"
+    },
+    {
+      "slug": "trump-admin-womens-healthcare",
+      "title": "How the Trump admin is attacking women’s healthcare",
+      "series": "",
+      "featured": false,
+      "draft": false,
+      "video": "/videos/ellen/reel-02.mp4",
+      "poster": "/videos/ellen/reel-02-poster.jpg",
+      "captions": "/uploads/captions/trump-admin-womens-healthcare.vtt",
+      "durationLabel": "1:29",
+      "date": "2026-07-18"
+    },
+    {
+      "slug": "the-importance-of-this-years-midterm-elections",
+      "title": "The Importance of this Year's Midterm Elections",
+      "series": "",
+      "featured": false,
+      "draft": false,
+      "video": "/uploads/videos/the-importance-of-this-years-midterm-elections.mp4",
+      "poster": "/uploads/posters/the-importance-of-this-years-midterm-elections.jpg",
+      "captions": "/uploads/captions/the-importance-of-this-years-midterm-elections.vtt",
+      "durationLabel": "1:12",
+      "date": "2026-08-03"
+    },
+    {
+      "slug": "n-word-as-a-white-person",
+      "title": "Using the N-word as a white person",
+      "series": "",
+      "featured": false,
+      "draft": false,
+      "video": "/videos/ellen/reel-01.mp4",
+      "poster": "/videos/ellen/reel-01-poster.jpg",
+      "captions": "/uploads/captions/n-word-as-a-white-person.vtt",
+      "durationLabel": "1:30",
+      "date": "2026-07-20"
+    },
+    {
+      "slug": "universal-healthcare",
+      "title": "Why universal healthcare isn’t the ‘perfect’ solution it’s sold as",
+      "series": "",
+      "featured": false,
+      "draft": false,
+      "video": "/videos/ellen/reel-05.mp4",
+      "poster": "/videos/ellen/reel-05-poster.jpg",
+      "captions": "/uploads/captions/universal-healthcare.vtt",
+      "durationLabel": "1:34",
+      "date": "2026-07-10"
+    },
+    {
+      "slug": "why-we-still-need-feminism",
+      "title": "Why we still need feminism",
+      "series": "",
+      "featured": false,
+      "draft": false,
+      "video": "/videos/ellen/reel-04.mp4",
+      "poster": "/videos/ellen/reel-04-poster.jpg",
+      "captions": "/uploads/captions/why-we-still-need-feminism.vtt",
+      "durationLabel": "1:07",
+      "date": "2026-07-12"
+    }
+  ]
+}

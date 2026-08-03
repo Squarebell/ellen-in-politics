@@ -18,6 +18,7 @@ export type Post = {
   seoTitle: string;
   seoDescription: string;
   ogImage: string;
+  related: string[];
   readingTimeMinutes: number;
 };
 
@@ -43,6 +44,14 @@ export function getPostBySlug(slug: string): Post | null {
 export function getRelatedPosts(slug: string, limit = 3): Post[] {
   const current = getPostBySlug(slug);
   if (!current) return [];
+
+  if (current.related?.length) {
+    const picked = current.related
+      .map((relatedSlug) => getPostBySlug(relatedSlug))
+      .filter((post): post is Post => !!post && post.slug !== slug);
+    if (picked.length) return picked.slice(0, limit);
+  }
+
   return posts
     .filter((post) => post.slug !== slug && post.topic === current.topic)
     .slice(0, limit);

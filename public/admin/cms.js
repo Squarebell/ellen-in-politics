@@ -249,19 +249,32 @@
         this.setState({ error: "Please drop an image file (JPG, PNG, HEIC, WebP)." });
         return;
       }
+      var warnMb = 1.5;
+      var sizeMb = file.size / (1024 * 1024);
+      var sizeWarning =
+        sizeMb > warnMb
+          ? "This image is " +
+            sizeMb.toFixed(1) +
+            "MB — large for the web. Prefer under ~1.5MB (export/compress before upload)."
+          : "";
       if (!this.props.onPersistMedia) {
         this.setState({ error: "Upload isn’t available — use Choose from library instead." });
         this.openLibrary();
         return;
       }
 
-      this.setState({ uploading: true, error: "" });
+      this.setState({ uploading: true, error: sizeWarning });
       Promise.resolve(this.props.onPersistMedia(file, { field: this.props.field }))
         .then(function (result) {
           var mediaFile = extractMediaFile(result);
           var nextValue = publicPathForMedia(self.props.field, mediaFile, file);
           self.props.onChange(nextValue);
-          if (self._mounted) self.setState({ uploading: false });
+          if (self._mounted) {
+            self.setState({
+              uploading: false,
+              error: sizeWarning,
+            });
+          }
         })
         .catch(function (err) {
           console.error(err);
