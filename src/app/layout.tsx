@@ -17,15 +17,15 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    default: "Ellen Carty · in Politics",
-    template: "%s · Ellen Carty",
+    default: "Ellen in Politics",
+    template: "%s · Ellen in Politics",
   },
   description:
-    "Ellen Carty — politics, civic life, and public voice. Writing and commentary from Washington, D.C.",
+    "Advocate. Student. Creator. American. Politics, civic life, and public voice — based out of Philadelphia and Washington D.C.",
   openGraph: {
-    title: "Ellen Carty · in Politics",
+    title: "Ellen in Politics",
     description:
-      "Politics, civic life, and public voice — built in public from the District outward.",
+      "Advocate. Student. Creator. American. Politics, civic life, and public voice — based out of Philadelphia and Washington D.C.",
     type: "website",
   },
 };

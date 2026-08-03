@@ -11,7 +11,7 @@ export const socials = {
   },
   email: {
     label: "Email",
-    href: "mailto:hello@elleninpolitics.com",
-    handle: "hello@elleninpolitics.com",
+    href: "mailto:ellencarty2008@icloud.com",
+    handle: "ellencarty2008@icloud.com",
   },
 } as const;

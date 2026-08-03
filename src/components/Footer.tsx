@@ -13,7 +13,7 @@ export function Footer() {
             Ellen Carty
           </Link>
           <p className="mt-2 text-[13px] tracking-[0.04em] text-white/45">
-            in Politics — Philly // D.C.
+            in Politics — Based out of Philadelphia and Washington D.C.
           </p>
         </div>
         <div className="flex flex-wrap gap-8 text-[12px] font-medium tracking-[0.1em] uppercase">

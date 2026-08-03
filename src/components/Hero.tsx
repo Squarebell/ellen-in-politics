@@ -70,11 +70,11 @@ export function Hero() {
     >
       <div ref={mediaRef} className="absolute inset-0 will-change-transform">
         <Image
-          src="https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=2400&q=80"
-          alt="Washington DC monuments at dusk"
+          src="https://images.unsplash.com/photo-1543372654-b45dd90eeee5?auto=format&fit=crop&w=2400&q=80"
+          alt="The United States Capitol lit up at night"
           fill
           priority
-          className="object-cover object-[center_35%]"
+          className="object-cover object-[center_60%]"
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/30" />
@@ -104,10 +104,9 @@ export function Hero() {
 
         <p
           data-hero-line
-          className="mt-8 max-w-md text-[16px] leading-relaxed text-white/70 md:text-[18px]"
+          className="mt-8 text-[17px] tracking-[0.02em] text-white/80 md:text-[20px]"
         >
-          A personal portfolio of civic writing, awareness, and connection —
-          built in public.
+          Advocate. Student. Creator. American.
         </p>
 
         <div data-hero-line className="mt-10 flex flex-wrap items-center gap-3">

@@ -12,29 +12,33 @@ const beats = [
     title: "Civic Engagement",
     body: "Democracy works best when citizens are informed, engaged, and active participants in civic life.",
     image:
-      "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1800&q=80",
-    alt: "US Capitol dome",
+      "https://images.unsplash.com/photo-1602089097457-1badf4b7ffa7?auto=format&fit=crop&w=1800&q=80",
+    alt: "Marchers holding handmade protest signs at dusk",
+    position: "center",
   },
   {
     title: "Political Moderation",
     body: "Practical solutions often come from the center. In a time of deep political polarization, Ellen advocates for evidence-based policymaking and thoughtful compromise.",
     image:
-      "https://images.unsplash.com/photo-1555848962-6e79363ec58f?auto=format&fit=crop&w=1800&q=80",
-    alt: "Steps of a government building",
+      "https://images.unsplash.com/photo-1611010638643-051de75362ff?auto=format&fit=crop&w=1800&q=80",
+    alt: "Looking up at the US Capitol dome with the American flag",
+    position: "center 40%",
   },
   {
     title: "Gender Equality",
     body: "Feminist forward. Ellen is committed to advocating for women's equality and educating others about the ways patriarchal systems continue to shape our society and everyday lives.",
     image:
-      "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1800&q=80",
-    alt: "American flag detail",
+      "https://images.unsplash.com/photo-1548383675-379abfac2c41?auto=format&fit=crop&w=1800&q=80",
+    alt: "A handmade 'Smash the Patriarchy' sign held up at a march",
+    position: "center 30%",
   },
   {
     title: "Patriotism",
     body: "Patriotism means loving your country enough to help it improve. Ellen believes in America's promise and its potential, while recognizing that acknowledging our shortcomings is essential to building a stronger and more just nation. Love of country includes celebrating its achievements, learning from its history, and working toward a more perfect union.",
     image:
-      "https://images.unsplash.com/photo-1555881403-64995e62269b?auto=format&fit=crop&w=1800&q=80",
-    alt: "Washington Monument at dusk",
+      "https://images.unsplash.com/photo-1585628774979-8b183a436b9f?auto=format&fit=crop&w=1800&q=80",
+    alt: "The American flag flying against a clear blue sky",
+    position: "center",
   },
 ];
 
@@ -136,6 +140,7 @@ export function Story() {
                 alt={beat.alt}
                 fill
                 className="object-cover"
+                style={{ objectPosition: beat.position }}
                 sizes="100vw"
                 priority={index === 0}
                 onLoadingComplete={() => ScrollTrigger.refresh()}

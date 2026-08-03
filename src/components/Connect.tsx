@@ -66,7 +66,7 @@ export function Connect() {
           </p>
 
           <ul className="mt-10 space-y-0">
-            {[socials.instagram, socials.linkedin].map((item) => (
+            {[socials.instagram, socials.linkedin, socials.email].map((item) => (
               <li key={item.href} className="border-t border-rule">
                 <a
                   href={item.href}
