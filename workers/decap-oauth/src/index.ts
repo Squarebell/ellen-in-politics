@@ -16,19 +16,19 @@ interface Env {
 }
 
 function authorizeHtml(status: "success" | "error", token: string): Response {
-  const payload = JSON.stringify({ token });
+  // Must be a JS string literal — embedding raw JSON breaks the script.
+  const message = JSON.stringify(
+    `authorization:github:${status}:${JSON.stringify({ token })}`,
+  );
   const html = `<!doctype html>
 <html>
   <head><meta charset="utf-8" /><title>Authorizing…</title></head>
   <body>
-    <p>Authorizing Decap CMS…</p>
+    <p>Authorizing Decap CMS… you can close this window if it doesn’t close itself.</p>
     <script>
       (function () {
-        function receiveMessage(message) {
-          window.opener.postMessage(
-            "authorization:github:${status}:${payload}",
-            "*"
-          );
+        function receiveMessage(event) {
+          window.opener.postMessage(${message}, event.origin);
           window.removeEventListener("message", receiveMessage, false);
         }
         window.addEventListener("message", receiveMessage, false);
