@@ -29,13 +29,43 @@ collections:
     format: frontmatter
     sortable_fields: ["date", "title", "topic"]
     fields:
-      - { label: Title, name: title, widget: string }
-      - { label: Excerpt, name: excerpt, widget: text }
-      - { label: Publish date, name: date, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
-      - { label: Topic, name: topic, widget: select, options: ["Civic", "Feminism", "Democracy", "Career", "Policy"], default: "Civic" }
-      - { label: Cover image URL, name: image, widget: string, required: false }
-      - { label: Cover image alt, name: imageAlt, widget: string, required: false }
-      - { label: Body, name: body, widget: markdown }
+      - label: Title
+        name: title
+        widget: string
+      - label: Excerpt
+        name: excerpt
+        widget: text
+        hint: "A short one-or-two sentence teaser. Shown on the homepage under the title."
+      - label: Publish date
+        name: date
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        format: YYYY-MM-DD
+      - label: Topic
+        name: topic
+        widget: select
+        options: ["Civic", "Feminism", "Democracy", "Career", "Policy"]
+        default: "Civic"
+      - label: Cover image
+        name: image
+        widget: image
+        required: false
+        choose_url: true
+        media_folder: public/uploads/covers
+        public_folder: /uploads/covers
+        hint: "Click to upload a photo from your computer, or use “Insert from URL” to paste a link. This is the big image at the top of the post."
+      - label: Cover image description
+        name: imageAlt
+        widget: string
+        required: false
+        hint: "A short description of the cover image (helps screen readers and search engines), e.g. “Voters waiting in line outside a polling place”."
+      - label: Body
+        name: body
+        widget: markdown
+        media_folder: public/uploads/posts
+        public_folder: /uploads/posts
+        hint: "Write your post here. Use the + button in the toolbar (or drag & drop) to add images right inside the text. The pane on the right shows how the post will look on the site."
 
   - name: videos
     label: Watch
