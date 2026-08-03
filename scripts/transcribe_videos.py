@@ -42,6 +42,21 @@ MODEL_NAME = os.environ.get("WHISPER_MODEL", "large-v2")
 COMPUTE_TYPE = os.environ.get("WHISPER_COMPUTE", "float32")
 LANGUAGE = os.environ.get("WHISPER_LANGUAGE", "en")
 
+def resolve_public_file(public_path: str | None) -> Path | None:
+    """Find a public-facing media file, including CMS misplacement."""
+    if not public_path or public_path.startswith("http"):
+        return None
+
+    rel = public_path.lstrip("/")
+    candidates = [
+        PUBLIC_DIR / rel,
+        VIDEOS_DIR / "public" / rel,
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return None
+
 
 def read_frontmatter_value(text: str, key: str) -> str | None:
     match = re.search(rf"^{key}:\s*(.+?)\s*$", text, re.MULTILINE)
@@ -153,9 +168,9 @@ def main() -> int:
         if captions_exists and not force:
             continue
 
-        video_path = PUBLIC_DIR / video.lstrip("/")
-        if not video_path.exists():
-            print(f"skip {md_file.name}: video file not found at {video_path}")
+        video_path = resolve_public_file(video)
+        if not video_path:
+            print(f"skip {md_file.name}: video file not found ({video})")
             continue
 
         pending.append((md_file, text, video_path))

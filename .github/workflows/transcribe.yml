@@ -1,8 +1,9 @@
-name: Auto-generate captions
+name: Process & caption videos
 
-# Runs whenever video content changes on main. Any video without a captions
-# file gets transcribed with open-source Whisper (free), the .vtt is committed
-# back, and a site deploy is triggered so captions go live automatically.
+# When Ellen publishes a video from her iPhone, this workflow:
+#   1. Moves/converts .mov to web .mp4, generates poster + duration
+#   2. Transcribes audio into .vtt captions + on-page transcript
+#   3. Commits results and triggers a site deploy
 
 on:
   push:
@@ -10,7 +11,10 @@ on:
       - main
     paths:
       - "content/videos/**"
+      - "content/posts/**"
       - "public/uploads/videos/**"
+      - "public/uploads/covers/**"
+      - "public/uploads/posters/**"
       - "public/videos/**"
   workflow_dispatch:
 
@@ -45,6 +49,12 @@ jobs:
           path: ~/.cache/huggingface
           key: whisper-large-v2
 
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Process uploaded videos (mov→mp4, posters, duration)
+        run: python3 scripts/process_videos.py
+
       - name: Install faster-whisper
         run: pip install faster-whisper
 
@@ -61,8 +71,8 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/uploads/captions content/videos
-          git commit -m "Add auto-generated captions [auto-captions]"
+          git add public/uploads/videos public/uploads/posters public/uploads/captions content/videos
+          git commit -m "Process videos and add auto-generated captions [auto-captions]"
           git push origin main
           # Pushes made with GITHUB_TOKEN don't fire the deploy workflow on
           # their own, so kick it off explicitly.

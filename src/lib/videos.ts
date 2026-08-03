@@ -42,3 +42,18 @@ export function formatTimecode(seconds: number): string {
   const s = Math.floor(seconds % 60);
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
+
+/** MIME type for native <video> — supports iPhone .mov uploads before CI remuxes them. */
+export function videoMimeType(src: string): string {
+  const ext = src.split(".").pop()?.toLowerCase();
+  switch (ext) {
+    case "mov":
+      return "video/quicktime";
+    case "webm":
+      return "video/webm";
+    case "m4v":
+      return "video/x-m4v";
+    default:
+      return "video/mp4";
+  }
+}

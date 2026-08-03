@@ -71,6 +71,75 @@ function resolvePublicPath(filePath) {
   return filePath.startsWith("/") ? filePath : `/${filePath}`;
 }
 
+/** Find a media file on disk, including CMS misplacement under content/videos/public/. */
+function findMediaFile(publicPath) {
+  if (!publicPath || /^https?:\/\//i.test(publicPath)) return null;
+  const rel = publicPath.replace(/^\//, "");
+  const candidates = [
+    path.join(publicRoot, rel),
+    path.join(videosDir, "public", rel),
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
+/** Prefer the processed slug.mp4 for new CMS uploads under /uploads/videos/. */
+function resolveVideoSrc(slug, dataVideo) {
+  const declared = resolvePublicPath(dataVideo) ?? "";
+  if (!dataVideo?.startsWith("/uploads/")) {
+    return declared;
+  }
+  const processed = `/uploads/videos/${slug}.mp4`;
+  if (fs.existsSync(path.join(publicRoot, processed.slice(1)))) {
+    return processed;
+  }
+  const found = findMediaFile(dataVideo);
+  if (found) {
+    return resolvePublicPath(`/uploads/videos/${path.basename(found)}`);
+  }
+  return declared;
+}
+
+function normalizeDurationLabel(raw) {
+  if (raw == null || raw === "") return "";
+  if (typeof raw === "number" && Number.isFinite(raw)) {
+    const total = Math.max(0, Math.round(raw));
+    const m = Math.floor(total / 60);
+    const s = total % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  }
+  const text = String(raw).trim();
+  const cleaned = text.replace(/\s+/g, "");
+  const match = cleaned.match(/^(\d+):(\d{1,2})$/);
+  if (match) {
+    return `${Number(match[1])}:${Number(match[2]).toString().padStart(2, "0")}`;
+  }
+  return text;
+}
+
+/** Prefer a .jpg poster; fall back to slug-based auto-generated poster. */
+function resolvePoster(slug, dataPoster) {
+  const autoPoster = `/uploads/posters/${slug}.jpg`;
+  if (fs.existsSync(path.join(publicRoot, autoPoster.replace(/^\//, "")))) {
+    return autoPoster;
+  }
+  const found = findMediaFile(dataPoster);
+  if (found) {
+    const ext = path.extname(found).toLowerCase();
+    if (ext === ".heic" || ext === ".heif") {
+      const jpg = autoPoster;
+      if (fs.existsSync(path.join(publicRoot, jpg.replace(/^\//, "")))) return jpg;
+    }
+    return resolvePublicPath(dataPoster);
+  }
+  return (
+    resolvePublicPath(dataPoster) ??
+    "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1200&q=80"
+  );
+}
+
 function formatDate(value) {
   if (!value) return "";
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
@@ -131,12 +200,10 @@ const videos = fs
       eyebrow: String(data.eyebrow ?? "Watch"),
       description: String(data.description ?? ""),
       date: formatDate(data.date),
-      src: resolvePublicPath(data.video) ?? "",
-      poster:
-        resolvePublicPath(data.poster) ??
-        "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1200&q=80",
+      src: resolveVideoSrc(slug, data.video),
+      poster: resolvePoster(slug, data.poster),
       captionsSrc,
-      durationLabel: String(data.durationLabel ?? ""),
+      durationLabel: normalizeDurationLabel(data.durationLabel),
       orientation: data.orientation === "landscape" ? "landscape" : "portrait",
       instagramUrl: data.instagramUrl
         ? String(data.instagramUrl)

@@ -10,6 +10,7 @@ import {
 import {
   featuredVideo,
   formatTimecode,
+  videoMimeType,
   type TranscriptCue,
   type VideoFeature,
 } from "@/lib/videos";
@@ -123,7 +124,7 @@ export function VideoPlayer({ video = featuredVideo }: VideoPlayerProps) {
             playsInline
             preload="metadata"
           >
-            <source src={video.src} type="video/mp4" />
+            <source src={video.src} type={videoMimeType(video.src)} />
             {video.captionsSrc ? (
               <track
                 kind="captions"
