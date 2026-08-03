@@ -13,7 +13,7 @@ logo_url: /favicon.ico
 display_url: https://elleninpolitics.com
 search: false
 
-# Uploaded images land in the repo and ship with the next deploy
+# Uploaded media lands in the repo and ships with the next deploy
 media_folder: public/uploads
 public_folder: /uploads
 
@@ -42,3 +42,113 @@ collections:
       - { label: Cover image URL, name: image, widget: string, required: false }
       - { label: Cover image alt, name: imageAlt, widget: string, required: false }
       - { label: Body, name: body, widget: markdown }
+
+  - name: videos
+    label: Watch
+    label_singular: Video
+    folder: content/videos
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    sortable_fields: ["date", "title"]
+    summary: "{{title}} — {{durationLabel}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - {
+          label: Eyebrow,
+          name: eyebrow,
+          widget: string,
+          default: "Watch",
+          hint: "Small label above the title, e.g. Watch · Policy",
+        }
+      - { label: Description, name: description, widget: text }
+      - {
+          label: Publish date,
+          name: date,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+          hint: "Newest videos show first on the Watch page",
+        }
+      - {
+          label: Duration label,
+          name: durationLabel,
+          widget: string,
+          hint: "Shown under the title, e.g. 1:30",
+        }
+      - {
+          label: Orientation,
+          name: orientation,
+          widget: select,
+          options: ["portrait", "landscape"],
+          default: "portrait",
+          hint: "portrait = Instagram reel (9:16), landscape = widescreen",
+        }
+      - {
+          label: Video file,
+          name: video,
+          widget: file,
+          media_folder: public/uploads/videos,
+          public_folder: /uploads/videos,
+          hint: "Upload an .mp4 (keep under ~95MB for GitHub)",
+        }
+      - {
+          label: Poster image,
+          name: poster,
+          widget: image,
+          media_folder: public/uploads/posters,
+          public_folder: /uploads/posters,
+          required: false,
+          hint: "Thumbnail shown before play / in the gallery",
+        }
+      - {
+          label: Captions (CC),
+          name: captions,
+          widget: file,
+          media_folder: public/uploads/captions,
+          public_folder: /uploads/captions,
+          required: false,
+          hint: "Upload a .vtt WebVTT captions file. Also used to build the on-page transcript if you don’t add timed lines below.",
+        }
+      - {
+          label: Instagram URL,
+          name: instagramUrl,
+          widget: string,
+          required: false,
+          default: "https://www.instagram.com/elleninpolitics/",
+        }
+      - {
+          label: Timed transcript,
+          name: transcript,
+          widget: list,
+          required: false,
+          hint: "Optional. Leave empty to auto-build from the captions .vtt file. Use this to override or add timed lines.",
+          summary: "{{start}}s–{{end}}s {{text}}",
+          fields:
+            - {
+                label: Start (seconds),
+                name: start,
+                widget: number,
+                value_type: float,
+                min: 0,
+                step: 0.1,
+              }
+            - {
+                label: End (seconds),
+                name: end,
+                widget: number,
+                value_type: float,
+                min: 0,
+                step: 0.1,
+              }
+            - { label: Text, name: text, widget: text }
+      - {
+          label: Plain transcript / notes,
+          name: body,
+          widget: markdown,
+          required: false,
+          hint: "Optional fallback transcript if you don’t have a .vtt or timed lines yet.",
+        }

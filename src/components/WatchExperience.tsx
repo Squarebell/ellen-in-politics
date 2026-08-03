@@ -3,18 +3,33 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { videos, type VideoFeature } from "@/lib/videos";
+import { type VideoFeature } from "@/lib/videos";
 
 type WatchExperienceProps = {
+  videos: VideoFeature[];
   initialSlug?: string;
 };
 
-export function WatchExperience({ initialSlug }: WatchExperienceProps) {
+export function WatchExperience({ videos, initialSlug }: WatchExperienceProps) {
   const initial =
     videos.find((video) => video.slug === initialSlug) ?? videos[0];
   const [active, setActive] = useState<VideoFeature>(initial);
 
-  const list = useMemo(() => videos, []);
+  const list = useMemo(() => videos, [videos]);
+
+  if (!videos.length) {
+    return (
+      <div className="mx-auto max-w-xl text-center">
+        <p className="eyebrow">Watch</p>
+        <h1 className="font-display mt-4 text-[clamp(2.6rem,6vw,4.25rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink">
+          Coming soon
+        </h1>
+        <p className="mt-5 text-[16px] leading-relaxed text-muted md:text-[17px]">
+          New videos will appear here after they&apos;re published in the CMS.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -121,12 +136,14 @@ export function WatchExperience({ initialSlug }: WatchExperienceProps) {
           >
             @elleninpolitics
           </a>
-          . Drop new{" "}
-          <span className="font-medium text-ink">.mp4</span> files into{" "}
-          <span className="font-medium text-ink">public/videos/ellen/</span> and
-          register them in{" "}
-          <span className="font-medium text-ink">src/lib/videos.ts</span> to add
-          more — captions and transcripts can be added anytime.
+          . New videos, captions, and transcripts are published from the{" "}
+          <a
+            href="/admin/"
+            className="font-medium text-ink underline decoration-rule underline-offset-4 transition hover:text-denim"
+          >
+            site admin
+          </a>
+          .
         </p>
       </aside>
     </div>

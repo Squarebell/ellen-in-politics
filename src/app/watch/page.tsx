@@ -2,11 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { WatchExperience } from "@/components/WatchExperience";
-import { featuredVideo } from "@/lib/videos";
+import { getAllVideos } from "@/lib/videos";
+
+export const dynamic = "force-static";
+
+const videos = getAllVideos();
 
 export const metadata: Metadata = {
   title: "Watch",
-  description: featuredVideo.description,
+  description:
+    videos[0]?.description ??
+    "Watch commentary and civic clips from Ellen Carty.",
 };
 
 export default function WatchPage() {
@@ -39,7 +45,7 @@ export default function WatchPage() {
 
       <main className="flex-1 bg-surface">
         <div className="mx-auto max-w-[1180px] px-6 py-14 md:px-10 md:py-20">
-          <WatchExperience />
+          <WatchExperience videos={videos} />
         </div>
       </main>
 

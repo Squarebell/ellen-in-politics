@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/build-posts.mjs",
-    "prebuild": "node scripts/build-posts.mjs",
+    "predev": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
+    "prebuild": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
+    "build:content": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
