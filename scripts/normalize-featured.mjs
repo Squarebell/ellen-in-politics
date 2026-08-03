@@ -25,8 +25,20 @@ function isFeatured(data) {
   return data.featured === true || data.featured === "true";
 }
 
+function todayUtc() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function isLive(data, today) {
+  if (data.draft === true || data.draft === "true") return false;
+  const after = formatDate(data.publishAfter);
+  if (after && after > today) return false;
+  return true;
+}
+
 function readEntries(dir) {
   if (!fs.existsSync(dir)) return [];
+  const today = todayUtc();
   return fs
     .readdirSync(dir)
     .filter((file) => file.endsWith(".md"))
@@ -40,6 +52,7 @@ function readEntries(dir) {
         slug: filename.replace(/\.md$/, ""),
         date: formatDate(parsed.data.date),
         featured: isFeatured(parsed.data),
+        live: isLive(parsed.data, today),
         parsed,
         raw,
       };
@@ -47,7 +60,8 @@ function readEntries(dir) {
 }
 
 function pickWinner(entries) {
-  const featured = entries.filter((entry) => entry.featured);
+  // Only live (non-draft / not scheduled) entries compete for the homepage pin.
+  const featured = entries.filter((entry) => entry.featured && entry.live);
   if (featured.length <= 1) return featured[0] ?? null;
   return [...featured].sort((a, b) => {
     const aTime = a.date ? new Date(a.date).getTime() : 0;
@@ -59,16 +73,18 @@ function pickWinner(entries) {
 
 function normalizeCollection(label, dir) {
   const entries = readEntries(dir);
-  const featured = entries.filter((entry) => entry.featured);
-  if (featured.length <= 1) {
-    console.log(`${label}: ${featured.length} featured — nothing to clear`);
+  const liveFeatured = entries.filter((entry) => entry.featured && entry.live);
+  if (liveFeatured.length <= 1) {
+    console.log(
+      `${label}: ${liveFeatured.length} live featured — nothing to clear`,
+    );
     return 0;
   }
 
   const winner = pickWinner(entries);
   let changed = 0;
 
-  for (const entry of featured) {
+  for (const entry of liveFeatured) {
     if (entry.slug === winner.slug) continue;
     const data = { ...entry.parsed.data, featured: false };
     const next = matter.stringify(entry.parsed.content, data);
@@ -80,7 +96,7 @@ function normalizeCollection(label, dir) {
   }
 
   console.log(
-    `${label}: kept featured → ${winner.slug} (newest of ${featured.length})`,
+    `${label}: kept featured → ${winner.slug} (newest of ${liveFeatured.length})`,
   );
   return changed;
 }
