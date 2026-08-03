@@ -61,6 +61,18 @@ jobs:
       - name: Transcribe videos missing captions
         run: python3 scripts/transcribe_videos.py
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Node deps (media check)
+        run: npm ci
+
+      - name: Check CMS media paths
+        run: npm run check:media
+
       - name: Commit captions and trigger deploy
         env:
           GH_TOKEN: ${{ github.token }}

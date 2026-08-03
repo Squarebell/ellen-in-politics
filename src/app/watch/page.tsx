@@ -2,16 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { WatchExperience } from "@/components/WatchExperience";
-import { getAllVideos } from "@/lib/videos";
+import { getAllVideos, getFeaturedVideo } from "@/lib/videos";
 
 export const dynamic = "force-static";
 
 const videos = getAllVideos();
+const featured = getFeaturedVideo(videos);
 
 export const metadata: Metadata = {
   title: "Watch",
   description:
-    videos[0]?.description ??
+    featured?.description ??
     "Watch commentary and civic clips from Ellen Carty.",
 };
 

@@ -1,6 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { canOptimizeImage, formatPostDate, type Post } from "@/lib/posts";
+import {
+  canOptimizeImage,
+  focusObjectPosition,
+  formatPostDate,
+  getFeaturedPost,
+  type Post,
+} from "@/lib/posts";
 import { socials } from "@/lib/socials";
 import { Reveal } from "./Reveal";
 
@@ -9,7 +15,10 @@ type PostsTeaserProps = {
 };
 
 export function PostsTeaser({ posts }: PostsTeaserProps) {
-  const [featured, ...rest] = posts;
+  const featured = getFeaturedPost(posts);
+  const rest = featured
+    ? posts.filter((post) => post.slug !== featured.slug)
+    : posts;
 
   return (
     <section id="work" className="bg-surface py-24 md:py-36">
@@ -51,6 +60,7 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
                   fill
                   unoptimized={!canOptimizeImage(featured.image)}
                   className="object-cover transition duration-[800ms] ease-out group-hover:scale-[1.025]"
+                  style={{ objectPosition: focusObjectPosition(featured.imageFocus) }}
                   sizes="(max-width: 768px) 100vw, 50vw"
                   priority
                 />
@@ -63,6 +73,10 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
                   <span className="text-muted/40">·</span>
                   <span className="text-[11px] font-medium tracking-[0.14em] text-denim uppercase">
                     {featured.topic}
+                  </span>
+                  <span className="text-muted/40">·</span>
+                  <span className="text-[11px] font-medium tracking-[0.14em] text-muted uppercase">
+                    {featured.readingTimeMinutes} min read
                   </span>
                 </div>
                 <h3 className="font-display mt-5 text-[clamp(2rem,4vw,3.35rem)] font-medium leading-[1.08] tracking-[-0.025em] text-ink transition group-hover:text-denim">
@@ -104,6 +118,9 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
                     </h3>
                     <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-muted md:text-[15px]">
                       {post.excerpt}
+                    </p>
+                    <p className="mt-2 text-[12px] text-muted">
+                      {post.readingTimeMinutes} min read
                     </p>
                   </div>
                   <time

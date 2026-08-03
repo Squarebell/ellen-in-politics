@@ -27,6 +27,9 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Check CMS media paths
+        run: npm run check:media
+
       - name: Build and deploy
         run: npm run deploy
         env:

@@ -1,5 +1,7 @@
 import postsData from "@/data/posts.json";
 
+export type ImageFocus = "center" | "top" | "bottom" | "left" | "right";
+
 export type Post = {
   slug: string;
   title: string;
@@ -8,7 +10,15 @@ export type Post = {
   topic: string;
   image: string;
   imageAlt: string;
+  imageFocus: ImageFocus;
   content: string;
+  featured: boolean;
+  homepage: boolean;
+  sortOrder: number | null;
+  seoTitle: string;
+  seoDescription: string;
+  ogImage: string;
+  readingTimeMinutes: number;
 };
 
 const posts = postsData as Post[];
@@ -17,8 +27,40 @@ export function getAllPosts(): Post[] {
   return posts;
 }
 
+export function getHomepagePosts(): Post[] {
+  return posts.filter((post) => post.homepage !== false);
+}
+
+export function getFeaturedPost(list: Post[] = getHomepagePosts()): Post | null {
+  if (!list.length) return null;
+  return list.find((post) => post.featured) ?? list[0];
+}
+
 export function getPostBySlug(slug: string): Post | null {
   return posts.find((post) => post.slug === slug) ?? null;
+}
+
+export function getRelatedPosts(slug: string, limit = 3): Post[] {
+  const current = getPostBySlug(slug);
+  if (!current) return [];
+  return posts
+    .filter((post) => post.slug !== slug && post.topic === current.topic)
+    .slice(0, limit);
+}
+
+export function focusObjectPosition(focus?: ImageFocus | string): string {
+  switch (focus) {
+    case "top":
+      return "center top";
+    case "bottom":
+      return "center bottom";
+    case "left":
+      return "left center";
+    case "right":
+      return "right center";
+    default:
+      return "center";
+  }
 }
 
 // Hosts allowed through the next/image optimizer (see next.config.ts).

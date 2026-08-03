@@ -8,13 +8,13 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Story } from "@/components/Story";
 import { WatchTeaser } from "@/components/WatchTeaser";
-import { getAllPosts } from "@/lib/posts";
+import { getHomepagePosts } from "@/lib/posts";
 import { getAllVideos } from "@/lib/videos";
 
 export const dynamic = "force-static";
 
 export default function Home() {
-  const posts = getAllPosts();
+  const posts = getHomepagePosts();
   const videos = getAllVideos();
 
   return (

@@ -22,9 +22,10 @@ type VideoPlayerProps = {
 };
 
 export function VideoPlayer({
-  video = featuredVideo,
+  video: videoProp,
   portraitHeight = "min(82vh, 920px)",
 }: VideoPlayerProps) {
+  const video = videoProp ?? featuredVideo;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [captionsOn, setCaptionsOn] = useState(false);
   const [transcriptOpen, setTranscriptOpen] = useState(false);
@@ -32,6 +33,8 @@ export function VideoPlayer({
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  const transcript = video?.transcript ?? [];
 
   const syncCaptions = useCallback(
     (on: boolean) => {
@@ -51,11 +54,11 @@ export function VideoPlayer({
 
   useEffect(() => {
     const el = videoRef.current;
-    if (!el) return;
+    if (!el || !video) return;
 
     const onTime = () => {
       setCurrentTime(el.currentTime);
-      const index = video.transcript.findIndex(
+      const index = transcript.findIndex(
         (cue) => el.currentTime >= cue.start && el.currentTime < cue.end,
       );
       if (index >= 0) setActiveCue(index);
@@ -78,7 +81,11 @@ export function VideoPlayer({
       el.removeEventListener("play", onPlay);
       el.removeEventListener("pause", onPause);
     };
-  }, [captionsOn, syncCaptions, video.transcript]);
+  }, [captionsOn, syncCaptions, transcript, video]);
+
+  if (!video) {
+    return null;
+  }
 
   function togglePlay() {
     const el = videoRef.current;

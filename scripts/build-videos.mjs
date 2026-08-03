@@ -9,6 +9,8 @@ const videosDir = path.join(root, "content", "videos");
 const outFile = path.join(root, "src", "data", "videos.json");
 const publicRoot = path.join(root, "public");
 
+const FOCUS_VALUES = new Set(["center", "top", "bottom", "left", "right"]);
+
 /**
  * Parse a WebVTT file into timed transcript cues.
  * Supports common Instagram/export formats.
@@ -150,6 +152,22 @@ function formatDate(value) {
   return match ? match[1] : text;
 }
 
+function todayUtc() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function isPublished(data, today) {
+  if (data.draft === true || data.draft === "true") return false;
+  const after = formatDate(data.publishAfter);
+  if (after && after > today) return false;
+  return true;
+}
+
+function normalizeFocus(value) {
+  const focus = String(value ?? "center").toLowerCase();
+  return FOCUS_VALUES.has(focus) ? focus : "center";
+}
+
 function loadCaptionsTranscript(captionsSrc) {
   if (!captionsSrc || /^https?:\/\//i.test(captionsSrc)) return [];
   const absolute = path.join(publicRoot, captionsSrc.replace(/^\//, ""));
@@ -157,9 +175,20 @@ function loadCaptionsTranscript(captionsSrc) {
   return parseVtt(fs.readFileSync(absolute, "utf8"));
 }
 
+function compareVideos(a, b) {
+  const aOrder = Number.isFinite(a.sortOrder) ? a.sortOrder : Number.POSITIVE_INFINITY;
+  const bOrder = Number.isFinite(b.sortOrder) ? b.sortOrder : Number.POSITIVE_INFINITY;
+  if (aOrder !== bOrder) return aOrder - bOrder;
+  const aTime = a.date ? new Date(a.date).getTime() : 0;
+  const bTime = b.date ? new Date(b.date).getTime() : 0;
+  return bTime - aTime;
+}
+
 if (!fs.existsSync(videosDir)) {
   fs.mkdirSync(videosDir, { recursive: true });
 }
+
+const today = todayUtc();
 
 const videos = fs
   .readdirSync(videosDir)
@@ -194,6 +223,10 @@ const videos = fs
       transcript = [{ start: 0, end: 9999, text: bodyText }];
     }
 
+    const sortRaw = data.sortOrder;
+    const sortOrder =
+      sortRaw === "" || sortRaw == null ? null : Number(sortRaw);
+
     return {
       slug,
       title: String(data.title ?? slug),
@@ -202,6 +235,7 @@ const videos = fs
       date: formatDate(data.date),
       src: resolveVideoSrc(slug, data.video),
       poster: resolvePoster(slug, data.poster),
+      posterFocus: normalizeFocus(data.posterFocus),
       captionsSrc,
       durationLabel: normalizeDurationLabel(data.durationLabel),
       orientation: data.orientation === "landscape" ? "landscape" : "portrait",
@@ -209,15 +243,16 @@ const videos = fs
         ? String(data.instagramUrl)
         : "https://www.instagram.com/elleninpolitics/",
       transcript,
+      featured: data.featured === true || data.featured === "true",
+      series: data.series ? String(data.series).trim() : "",
+      sortOrder: Number.isFinite(sortOrder) ? sortOrder : null,
+      _published: isPublished(data, today),
     };
   })
-  .filter((video) => video.src)
-  .sort((a, b) => {
-    const aTime = a.date ? new Date(a.date).getTime() : 0;
-    const bTime = b.date ? new Date(b.date).getTime() : 0;
-    return bTime - aTime;
-  });
+  .filter((video) => video.src && video._published)
+  .map(({ _published, ...video }) => video)
+  .sort(compareVideos);
 
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, JSON.stringify(videos, null, 2) + "\n");
-console.log(`Wrote ${videos.length} videos → src/data/videos.json`);
+console.log(`Wrote ${videos.length} published videos → src/data/videos.json`);

@@ -154,6 +154,19 @@
           ? this.props.entry.getIn(["data", "orientation"])
           : null;
       if (nextOrientation !== curOrientation) return true;
+      var focusField =
+        this.props.field && this.props.field.get("focus_field");
+      if (focusField) {
+        var nextFocus =
+          nextProps.entry && nextProps.entry.getIn
+            ? nextProps.entry.getIn(["data", focusField])
+            : null;
+        var curFocus =
+          this.props.entry && this.props.entry.getIn
+            ? this.props.entry.getIn(["data", focusField])
+            : null;
+        if (nextFocus !== curFocus) return true;
+      }
       return false;
     },
 
@@ -308,6 +321,21 @@
                 className: "cover-frame__image",
                 src: src,
                 alt: "",
+                style: {
+                  objectPosition: (function () {
+                    var focusField = field.get("focus_field");
+                    var focus =
+                      (focusField &&
+                        entry &&
+                        entry.getIn(["data", focusField])) ||
+                      "center";
+                    if (focus === "top") return "center top";
+                    if (focus === "bottom") return "center bottom";
+                    if (focus === "left") return "left center";
+                    if (focus === "right") return "right center";
+                    return "center";
+                  })(),
+                },
               })
             : h(
                 "div",
@@ -410,6 +438,234 @@
   CMS.registerWidget("cover-frame", CoverFrameControl, CoverFramePreview);
 
   /* ------------------------------------------------------------------ */
+  /*  editorial-note — publish tips / slug / status checklist            */
+  /* ------------------------------------------------------------------ */
+  var EditorialNoteControl = createClass({
+    render: function () {
+      var field = this.props.field;
+      var notes = field.get("notes");
+      var items = [];
+      if (notes && notes.toJS) {
+        items = notes.toJS();
+      } else if (Array.isArray(notes)) {
+        items = notes;
+      }
+      var entry = this.props.entry;
+      var draft = entry && entry.getIn(["data", "draft"]);
+      var publishAfter = entry && entry.getIn(["data", "publishAfter"]);
+      var title = (entry && entry.getIn(["data", "title"])) || "";
+      var slugGuess = String(title)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+      var checklist = [];
+      if (draft === true) checklist.push("Draft is ON — this will not appear on the live site.");
+      if (publishAfter) {
+        checklist.push("Scheduled for " + String(publishAfter).slice(0, 10) + " (UTC) — hidden until then.");
+      }
+      if (!draft && !publishAfter) checklist.push("Ready to go live on the next deploy after Publish.");
+      if (slugGuess) checklist.push("Likely URL slug: /posts/" + slugGuess + " (or /watch for videos). Renaming later breaks old links.");
+
+      return h(
+        "div",
+        { className: "editorial-note", id: this.props.forID },
+        h("p", { className: "editorial-note__title" }, "Before you publish"),
+        h(
+          "ul",
+          { className: "editorial-note__list" },
+          items.map(function (note, index) {
+            return h("li", { key: "n-" + index }, note);
+          })
+        ),
+        checklist.length
+          ? h(
+              "ul",
+              { className: "editorial-note__status" },
+              checklist.map(function (item, index) {
+                return h("li", { key: "c-" + index }, item);
+              })
+            )
+          : null
+      );
+    },
+  });
+
+  CMS.registerWidget("editorial-note", EditorialNoteControl, createClass({
+    render: function () {
+      return h("span", null);
+    },
+  }));
+
+  /* ------------------------------------------------------------------ */
+  /*  video-file — file picker with size guardrail                       */
+  /* ------------------------------------------------------------------ */
+  var MAX_VIDEO_MB_DEFAULT = 95;
+
+  var VideoFileControl = createClass({
+    getInitialState: function () {
+      return { controlID: uuid(), error: "", uploading: false };
+    },
+
+    componentDidMount: function () {
+      this._mounted = true;
+    },
+
+    componentWillUnmount: function () {
+      this._mounted = false;
+      if (this.props.onRemoveMediaControl) {
+        this.props.onRemoveMediaControl(this.state.controlID);
+      }
+    },
+
+    componentDidUpdate: function () {
+      var mediaPaths = this.props.mediaPaths;
+      if (!mediaPaths || !mediaPaths.get) return;
+      var mediaPath = mediaPaths.get(this.state.controlID);
+      if (mediaPath && mediaPath !== this.props.value) {
+        this.props.onChange(mediaPath);
+      } else if (mediaPath && mediaPath === this.props.value) {
+        if (this.props.onRemoveInsertedMedia) {
+          this.props.onRemoveInsertedMedia(this.state.controlID);
+        }
+      }
+    },
+
+    maxBytes: function () {
+      var maxMb = Number(this.props.field.get("max_mb")) || MAX_VIDEO_MB_DEFAULT;
+      return maxMb * 1024 * 1024;
+    },
+
+    openLibrary: function (event) {
+      if (event) event.preventDefault();
+      if (!this.props.onOpenMediaLibrary) return;
+      this.props.onOpenMediaLibrary({
+        controlID: this.state.controlID,
+        forImage: false,
+        privateUpload: this.props.field.get("private"),
+        value: this.props.value || "",
+        allowMultiple: false,
+        config: this.props.field.getIn(["media_library", "config"]),
+        field: this.props.field,
+      });
+    },
+
+    clearValue: function (event) {
+      if (event) event.preventDefault();
+      if (this.props.onClearMediaControl) {
+        this.props.onClearMediaControl(this.state.controlID);
+      }
+      this.props.onChange("");
+      if (this._mounted) this.setState({ error: "" });
+    },
+
+    onFileInput: function (event) {
+      var files = event.target.files;
+      if (files && files.length) this.ingestFile(files[0]);
+      event.target.value = "";
+    },
+
+    ingestFile: function (file) {
+      var self = this;
+      if (!file) return;
+      var max = this.maxBytes();
+      var maxMb = Math.round(max / (1024 * 1024));
+      if (file.size > max) {
+        this.setState({
+          error:
+            "That file is " +
+            (file.size / (1024 * 1024)).toFixed(1) +
+            "MB. Keep videos under ~" +
+            maxMb +
+            "MB (compress on your phone) so GitHub stays reliable.",
+        });
+        return;
+      }
+      if (!this.props.onPersistMedia) {
+        this.setState({ error: "Upload isn’t available — use Choose from library." });
+        return;
+      }
+      this.setState({ uploading: true, error: "" });
+      Promise.resolve(this.props.onPersistMedia(file, { field: this.props.field }))
+        .then(function (result) {
+          var mediaFile = extractMediaFile(result);
+          var nextValue = publicPathForMedia(self.props.field, mediaFile, file);
+          self.props.onChange(nextValue);
+          if (self._mounted) self.setState({ uploading: false });
+        })
+        .catch(function (err) {
+          console.error(err);
+          if (self._mounted) {
+            self.setState({
+              uploading: false,
+              error: "Couldn’t upload that video. Try Choose from library.",
+            });
+          }
+        });
+    },
+
+    render: function () {
+      var value = this.props.value || "";
+      var maxMb = Number(this.props.field.get("max_mb")) || MAX_VIDEO_MB_DEFAULT;
+      return h(
+        "div",
+        { className: "video-file-widget", id: this.props.forID },
+        value
+          ? h("p", { className: "video-file-widget__value" }, value)
+          : h("p", { className: "video-file-widget__empty" }, "No video uploaded yet"),
+        h(
+          "div",
+          { className: "video-file-widget__actions" },
+          h(
+            "button",
+            { type: "button", className: "cover-frame__btn", onClick: this.openLibrary },
+            value ? "Replace from library" : "Choose from library"
+          ),
+          h(
+            "label",
+            { className: "cover-frame__btn cover-frame__btn--file" },
+            this.state.uploading ? "Uploading…" : "Upload from device",
+            h("input", {
+              type: "file",
+              accept: "video/*,.mov,.mp4,.m4v",
+              onChange: this.onFileInput,
+              hidden: true,
+              disabled: this.state.uploading,
+            })
+          ),
+          value
+            ? h(
+                "button",
+                {
+                  type: "button",
+                  className: "cover-frame__btn cover-frame__btn--danger",
+                  onClick: this.clearValue,
+                },
+                "Remove"
+              )
+            : null
+        ),
+        this.state.error
+          ? h("p", { className: "cover-frame__error" }, this.state.error)
+          : null,
+        h(
+          "p",
+          { className: "cover-frame__hint" },
+          "Max ~" +
+            maxMb +
+            "MB (.mov or .mp4). After Publish, remux + captions usually take a few minutes — refresh Watch later."
+        )
+      );
+    },
+  });
+
+  CMS.registerWidget("video-file", VideoFileControl, createClass({
+    render: function () {
+      return h("span", { className: "video-file-preview" }, this.props.value || "No video");
+    },
+  }));
+
+  /* ------------------------------------------------------------------ */
   /*  Writing preview                                                    */
   /* ------------------------------------------------------------------ */
   var PostPreview = createClass({
@@ -445,11 +701,27 @@
           h("p", { className: "site-preview__topic" }, topic),
           h("h1", { className: "site-preview__title" }, title),
           dateLabel ? h("time", { className: "site-preview__date" }, dateLabel) : null,
+          entry.getIn(["data", "draft"])
+            ? h("p", { className: "site-preview__draft" }, "Draft — not on the live site")
+            : null,
           coverSrc
             ? h(
                 "div",
                 { className: "site-preview__media" },
-                h("img", { src: coverSrc, alt: imageAlt })
+                h("img", {
+                  src: coverSrc,
+                  alt: imageAlt,
+                  style: {
+                    objectPosition: (function () {
+                      var focus = entry.getIn(["data", "imageFocus"]) || "center";
+                      if (focus === "top") return "center top";
+                      if (focus === "bottom") return "center bottom";
+                      if (focus === "left") return "left center";
+                      if (focus === "right") return "right center";
+                      return "center";
+                    })(),
+                  },
+                })
               )
             : h(
                 "div",
@@ -499,6 +771,14 @@
           "div",
           { className: "site-preview__badge" },
           "Preview · Watch video"
+        ),
+        entry.getIn(["data", "draft"])
+          ? h("p", { className: "site-preview__draft" }, "Draft — not on the live site")
+          : null,
+        h(
+          "p",
+          { className: "watch-preview__pipeline" },
+          "After Publish: remux + auto-captions usually take a few minutes. Refresh Watch later."
         ),
         h(
           "header",
