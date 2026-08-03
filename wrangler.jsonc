@@ -11,6 +11,7 @@
   "observability": {
     "enabled": true
   },
+  "workers_dev": true,
   // Requires elleninpolitics.com as an active Cloudflare zone (nameservers on Cloudflare).
   "routes": [
     { "pattern": "elleninpolitics.com", "custom_domain": true },
