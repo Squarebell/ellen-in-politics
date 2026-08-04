@@ -246,11 +246,12 @@ const videos = fs
       featured: data.featured === true || data.featured === "true",
       series: data.series ? String(data.series).trim() : "",
       sortOrder: Number.isFinite(sortOrder) ? sortOrder : null,
-      _published: isPublished(data, today),
-    };
-  })
-  .filter((video) => video.src && video._published)
-  .map(({ _published, ...video }) => video)
+    _published: isPublished(data, today),
+  };
+})
+.filter((video) => video.src && video._published)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+.map(({ _published, ...video }) => video)
   .sort(compareVideos);
 
 /** Only the newest featured video keeps featured:true in the public JSON. */

@@ -6,7 +6,7 @@ export default function NotFound() {
       <p className="text-[4rem] font-semibold tracking-[-0.04em] text-ink">
         404
       </p>
-      <p className="mt-2 text-[17px] text-muted">That post isn’t here.</p>
+      <p className="mt-2 text-[17px] text-muted">Page not found.</p>
       <Link
         href="/"
         className="mt-8 text-[15px] font-medium text-link transition hover:opacity-80"

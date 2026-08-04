@@ -90,8 +90,8 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
 
         <ul className="mt-6">
           {rest.map((post, index) => (
-            <Reveal key={post.slug} delay={0.04 * index}>
-              <li>
+            <li key={post.slug}>
+              <Reveal delay={0.04 * index}>
                 <Link
                   href={`/posts/${post.slug}`}
                   className="group grid gap-4 border-t border-rule py-8 transition md:grid-cols-[7.5rem_1fr_auto] md:items-baseline md:gap-10 md:py-9"
@@ -117,8 +117,8 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
                     {formatPostDate(post.date)}
                   </time>
                 </Link>
-              </li>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
         </ul>
       </div>

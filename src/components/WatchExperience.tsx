@@ -97,7 +97,10 @@ export function WatchExperience({ videos, initialSlug }: WatchExperienceProps) {
         <div className="mt-12 flex flex-wrap items-center justify-center gap-2 md:justify-start">
           <button
             type="button"
-            onClick={() => setSeriesFilter("all")}
+            onClick={() => {
+                setSeriesFilter("all");
+                setActive(undefined);
+              }}
             className={`text-[11px] font-medium tracking-[0.14em] uppercase transition ${
               seriesFilter === "all" ? "text-ink" : "text-muted hover:text-ink"
             }`}

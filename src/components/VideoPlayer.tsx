@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type KeyboardEvent,
@@ -34,7 +35,7 @@ export function VideoPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  const transcript = video?.transcript ?? [];
+  const transcript = useMemo(() => video?.transcript ?? [], [video]);
 
   const syncCaptions = useCallback(
     (on: boolean) => {
