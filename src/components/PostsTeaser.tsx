@@ -7,7 +7,6 @@ import {
   getFeaturedPost,
   type Post,
 } from "@/lib/posts";
-import { socials } from "@/lib/socials";
 import { Reveal } from "./Reveal";
 
 type PostsTeaserProps = {
@@ -30,21 +29,9 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
               Work worth sitting with.
             </h2>
           </div>
-          <div className="flex flex-wrap items-center gap-5">
-            <Link href="/watch" className="btn-editorial shrink-0">
-              Watch
-              <span aria-hidden>→</span>
-            </Link>
-            <a
-              href={socials.instagram.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-editorial shrink-0 text-muted"
-            >
-              @elleninpolitics
-              <span aria-hidden>→</span>
-            </a>
-          </div>
+          <Link href="/writing" className="btn-editorial shrink-0">
+            All writing <span aria-hidden>→</span>
+          </Link>
         </Reveal>
 
         {featured && (
