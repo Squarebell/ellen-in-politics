@@ -70,7 +70,7 @@ export default async function PostPage({ params }: PageProps) {
             Ellen Carty
           </Link>
           <Link
-            href="/#work"
+            href="/writing"
             className="text-[12px] font-medium tracking-[0.08em] text-muted uppercase transition hover:text-ink"
           >
             All writing

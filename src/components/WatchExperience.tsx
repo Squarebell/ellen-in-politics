@@ -192,15 +192,7 @@ export function WatchExperience({ videos, initialSlug }: WatchExperienceProps) {
           >
             @elleninpolitics
           </a>
-          . New videos, captions, and transcripts are published from the{" "}
-          <a
-            href="/admin/"
-            className="font-medium text-ink underline decoration-rule underline-offset-4 transition hover:text-denim"
-          >
-            site admin
-          </a>
-          . After uploading a video, remux and captions usually take a few
-          minutes before Watch updates.
+          .
         </p>
       </aside>
     </div>

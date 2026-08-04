@@ -6,13 +6,15 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/#work", label: "Writing" },
+  { href: "/writing", label: "Writing" },
   { href: "/watch", label: "Watch" },
   { href: "/reads", label: "Reads" },
   { href: "/#values", label: "Values" },
   { href: "/#about", label: "About" },
   { href: "/#connect", label: "Contact" },
 ];
+
+const sectionRoutes = new Set(["/writing", "/watch", "/reads"]);
 
 export function Nav() {
   const pathname = usePathname();
@@ -58,11 +60,7 @@ export function Nav() {
         <ul className="hidden items-center gap-1 md:flex">
           {links.map((link) => {
             const active =
-              link.href === "/watch"
-                ? pathname === "/watch"
-                : link.href === "/reads"
-                  ? pathname === "/reads"
-                  : false;
+              sectionRoutes.has(link.href) && pathname === link.href;
             return (
               <li key={link.href}>
                 <Link
