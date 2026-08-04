@@ -302,3 +302,59 @@ collections:
         widget: markdown
         required: false
         hint: "Optional fallback transcript if you don't have a .vtt or timed lines yet."
+
+  - name: reads
+    label: Reads
+    label_singular: Book
+    folder: content/reads
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    sortable_fields: ["date", "title", "author", "topic"]
+    summary: "{{title}} — {{author}}"
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Author
+        name: author
+        widget: string
+        hint: "Who wrote this book or piece."
+      - label: Date added
+        name: date
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        format: YYYY-MM-DD
+        hint: "Newest books show first on the Reads page"
+      - label: Note
+        name: note
+        widget: text
+        required: false
+        hint: "Optional short blurb — why this belongs on the political bookshelf."
+      - label: Topic
+        name: topic
+        widget: select
+        required: false
+        options: ["Civic", "Feminism", "Democracy", "Policy"]
+        default: "Civic"
+      - label: Cover image
+        name: image
+        widget: image
+        required: false
+        choose_url: true
+        media_folder: /public/uploads/covers
+        public_folder: /uploads/covers
+        hint: "Optional book cover. Upload a photo or paste a link."
+      - label: Cover image description
+        name: imageAlt
+        widget: string
+        required: false
+        hint: "Short description of the cover for screen readers."
+      - label: Link
+        name: link
+        widget: string
+        required: false
+        hint: "Optional URL — publisher page, bookstore, or further reading."

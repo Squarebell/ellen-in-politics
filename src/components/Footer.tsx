@@ -20,6 +20,9 @@ export function Footer() {
           <Link href="/watch" className="text-white/50 transition hover:text-white">
             Watch
           </Link>
+          <Link href="/reads" className="text-white/50 transition hover:text-white">
+            Reads
+          </Link>
           {[socials.instagram, socials.linkedin].map(
             (item) => (
               <a
