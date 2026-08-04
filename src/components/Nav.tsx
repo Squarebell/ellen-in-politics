@@ -52,7 +52,10 @@ export function Nav() {
           className={`font-display text-[1.35rem] font-medium tracking-[-0.02em] transition-colors md:text-[1.5rem] ${
             onLight ? "text-ink" : "text-white"
           }`}
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
         >
           Ellen Carty
         </Link>
