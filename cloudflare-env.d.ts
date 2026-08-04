@@ -4,7 +4,9 @@
 interface __BaseEnv_CloudflareEnv {
 	CONTACT_EMAIL: SendEmail;
 	ASSETS: Fetcher;
+	ANALYTICS: D1Database;
 	CONTACT_TO_EMAIL: "brady.spigelmyer@gmail.com";
+	NEXT_PUBLIC_CONTACT_API: "https://ellen-contact.squarebell.workers.dev";
 }
 declare namespace Cloudflare {
 	interface GlobalProps {
