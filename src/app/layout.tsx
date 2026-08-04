@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { AnalyticsBeacon } from "@/components/AnalyticsBeacon";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -40,7 +41,10 @@ export default function RootLayout({
       lang="en"
       className={`${cormorant.variable} ${outfit.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans">{children}</body>
+      <body className="flex min-h-full flex-col font-sans">
+        {children}
+        <AnalyticsBeacon />
+      </body>
     </html>
   );
 }

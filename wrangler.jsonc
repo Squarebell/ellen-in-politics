@@ -18,5 +18,13 @@
   ],
   "vars": {
     "NEXT_PUBLIC_CONTACT_API": "https://ellen-contact.squarebell.workers.dev"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "ANALYTICS",
+      "database_name": "ellen-analytics",
+      "database_id": "ff4a8724-b163-46d9-b8f2-3f78b0469b55",
+      "migrations_dir": "migrations"
+    }
+  ]
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>Ellen Carty — Content Admin</title>
+    <link rel="cms-config-url" type="text/yaml" href="/admin/config.yml" />
     <link rel="preconnect" href="https://unpkg.com" />
     <style>
       html,
@@ -15,6 +16,10 @@
       body {
         font-family: system-ui, sans-serif;
         background: #f4f1ea;
+      }
+      /* Decap avatar menu is ~100px — widen so “Analytics” fits above Logout */
+      [data-ellen-analytics] {
+        min-width: 120px;
       }
     </style>
   </head>
@@ -99,6 +104,79 @@
       });
 
       CMS.registerPreviewTemplate("posts", PostPreview);
+
+      // Decap's avatar menu only has Logout — inject Analytics above it.
+      (function () {
+        var ANALYTICS_HREF = "/analytics";
+        var MARK = "data-ellen-analytics";
+
+        function styleLikeSibling(source, target) {
+          if (!source) return;
+          var cs = window.getComputedStyle(source);
+          target.style.display = cs.display || "block";
+          target.style.padding = cs.padding || "8px 16px";
+          target.style.color = cs.color || "#313d3e";
+          target.style.fontSize = cs.fontSize || "14px";
+          target.style.fontFamily = cs.fontFamily || "inherit";
+          target.style.lineHeight = cs.lineHeight || "1.5";
+          target.style.fontWeight = cs.fontWeight || "400";
+          target.style.textDecoration = "none";
+          target.style.cursor = "pointer";
+          target.style.whiteSpace = "nowrap";
+          target.style.boxSizing = "border-box";
+          target.style.width = "100%";
+        }
+
+        function injectAnalytics(menu) {
+          if (!menu || menu.querySelector("[" + MARK + "]")) return;
+
+          var candidates = menu.querySelectorAll(
+            "[role='menuitem'], a, button, li, span, div"
+          );
+          var logout = Array.prototype.find.call(candidates, function (el) {
+            return /^log\s*out$/i.test((el.textContent || "").trim());
+          });
+          if (!logout) return;
+
+          var logoutRow =
+            logout.closest("[role='menuitem']") ||
+            logout.closest("li") ||
+            logout;
+          if (!logoutRow || !logoutRow.parentNode) return;
+
+          var item = document.createElement("a");
+          item.setAttribute(MARK, "1");
+          item.setAttribute("role", "menuitem");
+          item.href = ANALYTICS_HREF;
+          item.target = "_blank";
+          item.rel = "noopener noreferrer";
+          item.textContent = "Analytics";
+          styleLikeSibling(logoutRow, item);
+          item.addEventListener("mouseenter", function () {
+            item.style.background = "rgba(0, 0, 0, 0.05)";
+          });
+          item.addEventListener("mouseleave", function () {
+            item.style.background = "transparent";
+          });
+
+          logoutRow.parentNode.insertBefore(item, logoutRow);
+        }
+
+        function scan() {
+          document.querySelectorAll("ul, [role='menu']").forEach(function (node) {
+            if (/log\s*out/i.test(node.textContent || "")) injectAnalytics(node);
+          });
+        }
+
+        var obs = new MutationObserver(function () {
+          scan();
+        });
+        obs.observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+        });
+        scan();
+      })();
     </script>
   </body>
 </html>
