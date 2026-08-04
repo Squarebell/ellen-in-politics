@@ -6,12 +6,15 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/#work", label: "Writing" },
+  { href: "/writing", label: "Writing" },
   { href: "/watch", label: "Watch" },
+  { href: "/reads", label: "Reads" },
   { href: "/#values", label: "Values" },
   { href: "/#about", label: "About" },
   { href: "/#connect", label: "Contact" },
 ];
+
+const sectionRoutes = new Set(["/writing", "/watch", "/reads"]);
 
 export function Nav() {
   const pathname = usePathname();
@@ -49,7 +52,10 @@ export function Nav() {
           className={`font-display text-[1.35rem] font-medium tracking-[-0.02em] transition-colors md:text-[1.5rem] ${
             onLight ? "text-ink" : "text-white"
           }`}
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
         >
           Ellen Carty
         </Link>
@@ -57,7 +63,7 @@ export function Nav() {
         <ul className="hidden items-center gap-1 md:flex">
           {links.map((link) => {
             const active =
-              link.href === "/watch" ? pathname === "/watch" : false;
+              sectionRoutes.has(link.href) && pathname === link.href;
             return (
               <li key={link.href}>
                 <Link

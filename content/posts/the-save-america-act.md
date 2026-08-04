@@ -1,8 +1,11 @@
 ---
+draft: false
+featured: true
+homepage: true
 title: The "Save" America Act
 excerpt: "What is the SAVE Act and why is it a threat to democracy and voting rights? "
 date: 2026-07-17
-topic: Civic
+topic: "Voting rights "
 image: https://www.fau.edu/newsdesk/images/news/april2023-poll-image-2.jpg
 ---
 The goal of the SAVE Act is to tighten voter registration and identification requirements for federal elections. Under the Act, requirements such as proof of citizenship, a photo ID mandate, in-person verification for certain mail-in voters, new responsibilities for states, and penalties for people without the required documentation would be enacted.

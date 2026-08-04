@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { type VideoFeature } from "@/lib/videos";
+import { getFeaturedVideo, type VideoFeature } from "@/lib/videos";
 import { Reveal } from "./Reveal";
 
 type WatchTeaserProps = {
@@ -8,7 +8,7 @@ type WatchTeaserProps = {
 };
 
 export function WatchTeaser({ videos }: WatchTeaserProps) {
-  const [featured] = videos;
+  const featured = getFeaturedVideo(videos);
   if (!featured) return null;
 
   return (

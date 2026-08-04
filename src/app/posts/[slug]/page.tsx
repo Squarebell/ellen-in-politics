@@ -6,9 +6,11 @@ import { Footer } from "@/components/Footer";
 import { PostBody } from "@/components/PostBody";
 import {
   canOptimizeImage,
+  focusObjectPosition,
   formatPostDate,
   getAllPosts,
   getPostBySlug,
+  getRelatedPosts,
 } from "@/lib/posts";
 
 export const dynamic = "force-static";
@@ -27,9 +29,26 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) return { title: "Post" };
+  const title = post.seoTitle || post.title;
+  const description = post.seoDescription || post.excerpt;
+  const path = `/posts/${slug}`;
   return {
-    title: post.title,
-    description: post.excerpt,
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      title,
+      description,
+      url: path,
+      images: post.ogImage ? [{ url: post.ogImage }] : undefined,
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: post.ogImage ? [post.ogImage] : undefined,
+    },
   };
 }
 
@@ -40,6 +59,8 @@ export default async function PostPage({ params }: PageProps) {
   if (!post) {
     notFound();
   }
+
+  const related = getRelatedPosts(slug);
 
   return (
     <>
@@ -52,7 +73,7 @@ export default async function PostPage({ params }: PageProps) {
             Ellen Carty
           </Link>
           <Link
-            href="/#work"
+            href="/writing"
             className="text-[12px] font-medium tracking-[0.08em] text-muted uppercase transition hover:text-ink"
           >
             All writing
@@ -68,12 +89,11 @@ export default async function PostPage({ params }: PageProps) {
           <h1 className="font-display mt-5 text-[clamp(2.5rem,5.5vw,3.75rem)] font-medium leading-[1.08] tracking-[-0.025em] text-ink">
             {post.title}
           </h1>
-          <time
-            dateTime={post.date}
-            className="mt-5 block text-[13px] text-muted"
-          >
-            {formatPostDate(post.date)}
-          </time>
+          <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted">
+            <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+            <span className="text-muted/40">·</span>
+            <span>{post.readingTimeMinutes} min read</span>
+          </div>
 
           <div className="media-frame relative mt-12 aspect-[16/10]">
             <Image
@@ -83,6 +103,7 @@ export default async function PostPage({ params }: PageProps) {
               priority
               unoptimized={!canOptimizeImage(post.image)}
               className="object-cover"
+              style={{ objectPosition: focusObjectPosition(post.imageFocus) }}
               sizes="(max-width: 760px) 100vw, 760px"
             />
           </div>
@@ -91,11 +112,32 @@ export default async function PostPage({ params }: PageProps) {
             <PostBody content={post.content} />
           </div>
 
+          {related.length > 0 && (
+            <section className="mt-16 border-t border-rule pt-10">
+              <p className="eyebrow">More in {post.topic}</p>
+              <ul className="mt-6 space-y-5">
+                {related.map((item) => (
+                  <li key={item.slug}>
+                    <Link
+                      href={`/posts/${item.slug}`}
+                      className="group block transition"
+                    >
+                      <h2 className="font-display text-[1.35rem] font-medium tracking-[-0.02em] text-ink transition group-hover:text-denim md:text-[1.5rem]">
+                        {item.title}
+                      </h2>
+                      <p className="mt-1 text-[14px] text-muted">{item.excerpt}</p>
+                      <p className="mt-2 text-[12px] text-muted">
+                        {item.readingTimeMinutes} min read
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
           <div className="mt-16 border-t border-rule pt-8">
-            <Link
-              href="/#connect"
-              className="btn-editorial"
-            >
+            <Link href="/#connect" className="btn-editorial">
               Reach out about this piece <span aria-hidden>→</span>
             </Link>
           </div>

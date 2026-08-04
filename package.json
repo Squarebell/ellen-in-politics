@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
-    "prebuild": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
-    "build:content": "node scripts/build-posts.mjs && node scripts/build-videos.mjs",
+    "predev": "npm run build:content",
+    "prebuild": "npm run build:content && npm run check:media",
+    "build:content": "node scripts/build-posts.mjs && node scripts/build-videos.mjs && node scripts/build-reads.mjs && node scripts/build-admin-index.mjs",
+    "normalize:featured": "node scripts/normalize-featured.mjs",
+    "check:media": "node scripts/check-media.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -16,7 +18,8 @@
     "db:migrate:local": "wrangler d1 migrations apply ellen-analytics --local",
     "db:migrate:remote": "wrangler d1 migrations apply ellen-analytics --remote",
     "deploy:oauth": "wrangler deploy -c workers/decap-oauth/wrangler.jsonc",
-    "deploy:contact": "wrangler deploy -c workers/contact/wrangler.jsonc"
+    "deploy:contact": "wrangler deploy -c workers/contact/wrangler.jsonc",
+    "deploy:www-redirect": "wrangler deploy -c workers/www-redirect/wrangler.jsonc"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.2",

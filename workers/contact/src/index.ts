@@ -13,7 +13,8 @@ type ContactBody = {
 };
 
 function corsHeaders(origin: string | null, allowed: string[]) {
-  const ok = origin && allowed.includes(origin) ? origin : allowed[0] || "*";
+  const ok = origin && allowed.includes(origin) ? origin : allowed[0];
+  if (!ok) return {} as Record<string, string>;
   return {
     "Access-Control-Allow-Origin": ok,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -60,15 +61,15 @@ function buildRawEmail(options: {
     "",
     "—",
     "Ellen in Politics",
-    "https://www.elleninpolitics.com",
+    "https://elleninpolitics.com",
   ].join("\n");
 
   const html = [
     "<!doctype html><html><body style=\"font-family:Georgia,serif;line-height:1.5;color:#111;\">",
-    "<p>You received a new message from the <a href=\"https://www.elleninpolitics.com\">elleninpolitics.com</a> contact form.</p>",
+    "<p>You received a new message from the <a href=\"https://elleninpolitics.com\">elleninpolitics.com</a> contact form.</p>",
     `<p><strong>From:</strong><br>${escapeHtml(options.name)}<br>${escapeHtml(options.email)}</p>`,
     `<p><strong>Message:</strong><br>${escapeHtml(options.message).replaceAll("\n", "<br>")}</p>`,
-    "<p style=\"color:#555;\">— Ellen in Politics<br>https://www.elleninpolitics.com</p>",
+    "<p style=\"color:#555;\">— Ellen in Politics<br>https://elleninpolitics.com</p>",
     "</body></html>",
   ].join("");
 
@@ -100,7 +101,7 @@ function buildRawEmail(options: {
   ].join("\r\n");
 }
 
-export default {
+const contactWorker: ExportedHandler<Env> = {
   async fetch(request: Request, env: Env): Promise<Response> {
     const allowed = env.ALLOWED_ORIGINS.split(",")
       .map((value) => value.trim())
@@ -195,3 +196,5 @@ export default {
     }
   },
 };
+
+export default contactWorker;

@@ -1,7 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { canOptimizeImage, formatPostDate, type Post } from "@/lib/posts";
-import { socials } from "@/lib/socials";
+import {
+  canOptimizeImage,
+  focusObjectPosition,
+  formatPostDate,
+  getFeaturedPost,
+  type Post,
+} from "@/lib/posts";
 import { Reveal } from "./Reveal";
 
 type PostsTeaserProps = {
@@ -9,7 +14,10 @@ type PostsTeaserProps = {
 };
 
 export function PostsTeaser({ posts }: PostsTeaserProps) {
-  const [featured, ...rest] = posts;
+  const featured = getFeaturedPost(posts);
+  const rest = featured
+    ? posts.filter((post) => post.slug !== featured.slug)
+    : posts;
 
   return (
     <section id="work" className="bg-surface py-24 md:py-36">
@@ -21,21 +29,9 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
               Work worth sitting with.
             </h2>
           </div>
-          <div className="flex flex-wrap items-center gap-5">
-            <Link href="/watch" className="btn-editorial shrink-0">
-              Watch
-              <span aria-hidden>→</span>
-            </Link>
-            <a
-              href={socials.instagram.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-editorial shrink-0 text-muted"
-            >
-              @elleninpolitics
-              <span aria-hidden>→</span>
-            </a>
-          </div>
+          <Link href="/writing" className="btn-editorial shrink-0">
+            All writing <span aria-hidden>→</span>
+          </Link>
         </Reveal>
 
         {featured && (
@@ -51,6 +47,7 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
                   fill
                   unoptimized={!canOptimizeImage(featured.image)}
                   className="object-cover transition duration-[800ms] ease-out group-hover:scale-[1.025]"
+                  style={{ objectPosition: focusObjectPosition(featured.imageFocus) }}
                   sizes="(max-width: 768px) 100vw, 50vw"
                   priority
                 />
@@ -63,6 +60,10 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
                   <span className="text-muted/40">·</span>
                   <span className="text-[11px] font-medium tracking-[0.14em] text-denim uppercase">
                     {featured.topic}
+                  </span>
+                  <span className="text-muted/40">·</span>
+                  <span className="text-[11px] font-medium tracking-[0.14em] text-muted uppercase">
+                    {featured.readingTimeMinutes} min read
                   </span>
                 </div>
                 <h3 className="font-display mt-5 text-[clamp(2rem,4vw,3.35rem)] font-medium leading-[1.08] tracking-[-0.025em] text-ink transition group-hover:text-denim">
@@ -89,8 +90,8 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
 
         <ul className="mt-6">
           {rest.map((post, index) => (
-            <Reveal key={post.slug} delay={0.04 * index}>
-              <li>
+            <li key={post.slug}>
+              <Reveal delay={0.04 * index}>
                 <Link
                   href={`/posts/${post.slug}`}
                   className="group grid gap-4 border-t border-rule py-8 transition md:grid-cols-[7.5rem_1fr_auto] md:items-baseline md:gap-10 md:py-9"
@@ -105,6 +106,9 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
                     <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-muted md:text-[15px]">
                       {post.excerpt}
                     </p>
+                    <p className="mt-2 text-[12px] text-muted">
+                      {post.readingTimeMinutes} min read
+                    </p>
                   </div>
                   <time
                     dateTime={post.date}
@@ -113,8 +117,8 @@ export function PostsTeaser({ posts }: PostsTeaserProps) {
                     {formatPostDate(post.date)}
                   </time>
                 </Link>
-              </li>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
         </ul>
       </div>

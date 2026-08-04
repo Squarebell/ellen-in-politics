@@ -42,7 +42,7 @@ function authorizeHtml(status: "success" | "error", token: string): Response {
   });
 }
 
-export default {
+const oauthWorker: ExportedHandler<Env> = {
   async fetch(request: Request, env: Env): Promise<Response> {
     try {
       return await handle(request, env);
@@ -52,6 +52,8 @@ export default {
     }
   },
 };
+
+export default oauthWorker;
 
 async function handle(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);

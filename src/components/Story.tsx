@@ -143,7 +143,7 @@ export function Story() {
                 style={{ objectPosition: beat.position }}
                 sizes="100vw"
                 priority={index === 0}
-                onLoadingComplete={() => ScrollTrigger.refresh()}
+                onLoad={() => ScrollTrigger.refresh()}
               />
               <div className="absolute inset-0 bg-black/50" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/25" />

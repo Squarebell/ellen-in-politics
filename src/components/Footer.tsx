@@ -17,8 +17,14 @@ export function Footer() {
           </p>
         </div>
         <div className="flex flex-wrap gap-8 text-[12px] font-medium tracking-[0.1em] uppercase">
+          <Link href="/writing" className="text-white/50 transition hover:text-white">
+            Writing
+          </Link>
           <Link href="/watch" className="text-white/50 transition hover:text-white">
             Watch
+          </Link>
+          <Link href="/reads" className="text-white/50 transition hover:text-white">
+            Reads
           </Link>
           {[socials.instagram, socials.linkedin].map(
             (item) => (

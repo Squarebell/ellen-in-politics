@@ -11,7 +11,7 @@ backend:
 site_url: https://elleninpolitics.com
 logo_url: /favicon.ico
 display_url: https://elleninpolitics.com
-search: false
+search: true
 
 # Uploaded media lands in the repo and ships with the next deploy
 media_folder: public/uploads
@@ -21,14 +21,60 @@ collections:
   - name: posts
     label: Writing
     label_singular: Post
+    description: >-
+      Use the Workflow panel at the top of each entry. Drafts and future Publish-after
+      dates stay off the live site. Keep the filename/slug stable after publish.
     folder: content/posts
     create: true
     delete: true
     slug: "{{slug}}"
     extension: md
     format: frontmatter
-    sortable_fields: ["date", "title", "topic"]
+    sortable_fields: ["date", "title", "topic", "sortOrder", "featured"]
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+      - label: Featured
+        field: featured
+        pattern: true
     fields:
+      - label: Workflow
+        name: editorialNote
+        widget: workflow-panel
+        required: false
+        kind: posts
+        notes:
+          - "Featured pins the large homepage Writing card — only one at a time."
+          - "SEO fields are optional; title, excerpt, and cover are used by default."
+      - label: Draft
+        name: draft
+        widget: boolean
+        default: false
+        hint: "ON = saved in GitHub but not shown on the live site. Use while writing."
+      - label: Publish after
+        name: publishAfter
+        widget: schedule-date
+        required: false
+        hint: "Optional. Hide until this date (UTC)."
+      - label: Featured on homepage
+        name: featured
+        widget: featured-toggle
+        default: false
+        kind: posts
+        toggle_label: Featured on homepage
+        hint: "Pins the large Writing card. If another post is also featured, the newest by date wins and older pins clear after publish."
+      - label: Show on homepage
+        name: homepage
+        widget: boolean
+        default: true
+        hint: "OFF = keep the post at /posts/slug but hide it from the homepage Writing list."
+      - label: Sort order
+        name: sortOrder
+        widget: number
+        required: false
+        value_type: int
+        hint: "Optional. Lower numbers appear first (after Featured). Leave empty to sort by date."
       - label: Title
         name: title
         widget: string
@@ -44,41 +90,129 @@ collections:
         format: YYYY-MM-DD
       - label: Topic
         name: topic
-        widget: select
-        options: ["Civic", "Feminism", "Democracy", "Career", "Policy"]
+        widget: suggest-string
         default: "Civic"
-      - label: Cover image
+        suggestions: ["Civic", "Feminism", "Democracy", "Career", "Policy", "Connection"]
+        suggestions_from: topics
+        hint: "Pick a suggestion or type your own."
+      - label: Cover photo
         name: image
-        widget: image
+        widget: cover-frame
         required: false
         choose_url: true
+        aspect: "16 / 10"
+        frame_label: Cover frame
+        empty_hint: Drag a cover photo onto this frame
         media_folder: /public/uploads/covers
         public_folder: /uploads/covers
-        hint: "Upload a photo from your iPhone (.jpg, .heic, .png) or paste a link. HEIC is converted automatically after you publish."
+        focus_field: imageFocus
+        hint: "Drag a photo onto the frame. Large images (>~1.5MB) show a size warning. HEIC converts after publish."
+      - label: Cover focal point
+        name: imageFocus
+        widget: focal-point
+        required: false
+        default: "center"
+        image_field: image
+        hint: "Click the image (or use the buttons) to choose where it crops."
       - label: Cover image description
         name: imageAlt
         widget: string
         required: false
-        hint: "A short description of the cover image (helps screen readers and search engines), e.g. “Voters waiting in line outside a polling place”."
+        hint: "A short description of the cover image (helps screen readers and search engines)."
+      - label: SEO title
+        name: seoTitle
+        widget: string
+        required: false
+        hint: "Optional browser/search title. Defaults to the post title."
+      - label: SEO description
+        name: seoDescription
+        widget: text
+        required: false
+        hint: "Optional search/social description. Defaults to the excerpt."
+      - label: Social / OG image
+        name: ogImage
+        widget: image
+        required: false
+        media_folder: /public/uploads/covers
+        public_folder: /uploads/covers
+        hint: "Optional. Defaults to the cover photo when shared on social."
+      - label: Related posts
+        name: related
+        widget: related-posts
+        required: false
+      - label: Media health
+        name: mediaHealth
+        widget: media-health
+        required: false
+        # Must not use key "fields" — Decap reserves that for nested field schemas.
+        probe_fields: ["image", "ogImage"]
       - label: Body
         name: body
         widget: markdown
         media_folder: /public/uploads/posts
         public_folder: /uploads/posts
-        hint: "Write your post here. Use the + button in the toolbar (or drag & drop) to add images right inside the text. The pane on the right shows how the post will look on the site."
+        hint: "Write your post here. Use the + button (or drag & drop) for inline images. Reading time is calculated automatically."
 
   - name: videos
     label: Watch
     label_singular: Video
+    description: >-
+      Use the Workflow panel for checklist + post-publish pipeline status.
+      Keep videos under ~95MB. Leave Captions empty for auto-CC.
     folder: content/videos
     create: true
     delete: true
     slug: "{{slug}}"
     extension: md
     format: frontmatter
-    sortable_fields: ["date", "title"]
+    sortable_fields: ["date", "title", "sortOrder", "featured", "series"]
     summary: "{{title}} — {{durationLabel}}"
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+      - label: Featured
+        field: featured
+        pattern: true
     fields:
+      - label: Workflow
+        name: editorialNote
+        widget: workflow-panel
+        required: false
+        kind: videos
+        notes:
+          - "Keep video files under ~95MB (.mov or .mp4)."
+          - "Featured pins the homepage Watch clip. Series groups clips on Watch."
+      - label: Draft
+        name: draft
+        widget: boolean
+        default: false
+        hint: "ON = saved in GitHub but not shown on the live site."
+      - label: Publish after
+        name: publishAfter
+        widget: schedule-date
+        required: false
+      - label: Featured on homepage
+        name: featured
+        widget: featured-toggle
+        default: false
+        kind: videos
+        toggle_label: Featured on homepage
+        hint: "Pins the homepage Watch clip. If another video is also featured, the newest by date wins and older pins clear after publish."
+      - label: Sort order
+        name: sortOrder
+        widget: number
+        required: false
+        value_type: int
+        hint: "Optional. Lower numbers appear first. Leave empty to sort by date."
+      - label: Series / playlist
+        name: series
+        widget: suggest-string
+        required: false
+        suggestions: ["Midterms", "Healthcare", "Democracy", "Feminism"]
+        suggestions_from: series
+        placeholder: "e.g. Midterms"
+        hint: "Pick an existing series or type a new one."
       - label: Title
         name: title
         widget: string
@@ -96,7 +230,7 @@ collections:
         date_format: YYYY-MM-DD
         time_format: false
         format: YYYY-MM-DD
-        hint: "Newest videos show first on the Watch page"
+        hint: "Newest videos show first on the Watch page (unless Sort order is set)"
       - label: Duration label
         name: durationLabel
         widget: string
@@ -110,56 +244,117 @@ collections:
           - landscape
         default: portrait
         hint: "portrait = Instagram reel (9:16), landscape = widescreen"
-      - label: Video file
-        name: video
-        widget: file
-        # Leading slash = repo root. Without it Decap saves under content/videos/.
-        media_folder: /public/uploads/videos
-        public_folder: /uploads/videos
-        hint: "Upload from your iPhone (.mov or .mp4, under ~95MB). Everything else — thumbnail, duration, captions — is automatic."
-      - label: Poster image
+      - label: Poster / cover frame
         name: poster
-        widget: image
+        widget: cover-frame
         media_folder: /public/uploads/posters
         public_folder: /uploads/posters
         required: false
-        hint: "Optional — a thumbnail is grabbed from the video automatically. Upload one (.jpg or .heic) only to override."
+        choose_url: true
+        aspect_from: orientation
+        aspect_portrait: "9 / 16"
+        aspect_landscape: "16 / 9"
+        frame_label: Video poster frame
+        empty_hint: Drag a poster photo onto this frame
+        focus_field: posterFocus
+        hint: "Optional — a thumbnail is also grabbed from the video automatically after publish."
+      - label: Poster focal point
+        name: posterFocus
+        widget: focal-point
+        required: false
+        default: "center"
+        image_field: poster
+      - label: Video file
+        name: video
+        widget: video-file
+        media_folder: /public/uploads/videos
+        public_folder: /uploads/videos
+        max_mb: 95
+        hint: "Upload from your iPhone (.mov or .mp4, under ~95MB)."
+      - label: Captions status
+        name: captionsStatus
+        widget: captions-status
+        required: false
       - label: Captions (CC)
         name: captions
         widget: file
         media_folder: /public/uploads/captions
         public_folder: /uploads/captions
         required: false
-        hint: "Optional — leave empty and captions are auto-generated a few minutes after you publish. Upload a .vtt here only to use your own."
+        hint: "Optional — leave empty for auto-captions. Upload a .vtt only to use your own."
       - label: Instagram URL
         name: instagramUrl
         widget: string
         required: false
         default: "https://www.instagram.com/elleninpolitics/"
-      - label: Timed transcript
+      - label: Captions review / timed transcript
         name: transcript
-        widget: list
+        widget: transcript-cues
         required: false
-        hint: "Optional. Leave empty — the transcript builds itself from the (auto-generated) captions. Use this only to correct or override lines."
-        summary: "{{start}}s-{{end}}s {{text}}"
-        fields:
-          - label: Start (seconds)
-            name: start
-            widget: number
-            value_type: float
-            min: 0
-            step: 0.1
-          - label: End (seconds)
-            name: end
-            widget: number
-            value_type: float
-            min: 0
-            step: 0.1
-          - label: Text
-            name: text
-            widget: text
+      - label: Media health
+        name: mediaHealth
+        widget: media-health
+        required: false
+        # Must not use key "fields" — Decap reserves that for nested field schemas.
+        probe_fields: ["video", "poster", "captions"]
       - label: Plain transcript / notes
         name: body
         widget: markdown
         required: false
         hint: "Optional fallback transcript if you don't have a .vtt or timed lines yet."
+
+  - name: reads
+    label: Reads
+    label_singular: Book
+    folder: content/reads
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    sortable_fields: ["date", "title", "author", "topic"]
+    summary: "{{title}} — {{author}}"
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Author
+        name: author
+        widget: string
+        hint: "Who wrote this book or piece."
+      - label: Date added
+        name: date
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        format: YYYY-MM-DD
+        hint: "Newest books show first on the Reads page"
+      - label: Note
+        name: note
+        widget: text
+        required: false
+        hint: "Optional short blurb — why this belongs on the political bookshelf."
+      - label: Topic
+        name: topic
+        widget: select
+        required: false
+        options: ["Civic", "Feminism", "Democracy", "Policy"]
+        default: "Civic"
+      - label: Cover image
+        name: image
+        widget: image
+        required: false
+        choose_url: true
+        media_folder: /public/uploads/covers
+        public_folder: /uploads/covers
+        hint: "Optional book cover. Upload a photo or paste a link."
+      - label: Cover image description
+        name: imageAlt
+        widget: string
+        required: false
+        hint: "Short description of the cover for screen readers."
+      - label: Link
+        name: link
+        widget: string
+        required: false
+        hint: "Optional URL — publisher page, bookstore, or further reading."
