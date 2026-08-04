@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   description:
     featured?.description ??
     "Watch commentary and civic clips from Ellen Carty.",
+  alternates: { canonical: "/watch" },
+  openGraph: { url: "/watch" },
 };
 
 export default function WatchPage() {
