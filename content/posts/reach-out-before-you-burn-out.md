@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 featured: true
 homepage: true
 title: "Escalations In the Middle East "
