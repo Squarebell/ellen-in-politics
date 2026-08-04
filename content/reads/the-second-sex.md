@@ -1,8 +1,12 @@
 ---
-title: The Second Sex
-author: Simone de Beauvoir
-date: 2026-07-15
-note: Foundational feminism — still sharp on how politics, culture, and everyday life shape what it means to be a woman.
+title: "What She Said-The Art of Inspiring Action Through Speech. "
+author: Monica Lunin
+date: 2026-07-19
+note: "This book includes a variety of speeches written and delivered by
+  influential women throughout history. Lunin’s analysis of each speech provides
+  the reader with insight on how-to public speak with effectiveness and meaning,
+  especially as a woman. "
 topic: Feminism
-link: https://www.penguinrandomhouse.com/books/297576/the-second-sex-by-simone-de-beauvoir/
+imageAlt: ""
+link: ""
 ---
