@@ -69,8 +69,8 @@ export function ReadsTeaser({ reads }: ReadsTeaserProps) {
             );
 
             return (
-              <Reveal key={item.slug} delay={0.04 * index}>
-                <li>
+              <li key={item.slug}>
+                <Reveal delay={0.04 * index}>
                   {item.link ? (
                     <a
                       href={item.link}
@@ -85,8 +85,8 @@ export function ReadsTeaser({ reads }: ReadsTeaserProps) {
                       {inner}
                     </div>
                   )}
-                </li>
-              </Reveal>
+                </Reveal>
+              </li>
             );
           })}
         </ul>

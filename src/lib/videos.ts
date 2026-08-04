@@ -21,8 +21,8 @@ export type VideoFeature = {
   /** portrait = Instagram reel (9:16), landscape = widescreen */
   orientation?: "portrait" | "landscape";
   transcript: TranscriptCue[];
-  /** Optional Instagram reel URL for “view on Instagram” */
-  instagramUrl?: string;
+  /** Optional Instagram reel URL or profile fallback — always set by the build script */
+  instagramUrl: string;
   featured?: boolean;
   series?: string;
   sortOrder?: number | null;

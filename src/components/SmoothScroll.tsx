@@ -4,6 +4,7 @@ import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,9 +17,9 @@ type SmoothScrollProps = {
  * If the OS asks for reduced motion, we skip Lenis but keep ScrollTrigger working on native scroll.
  */
 export function SmoothScroll({ children }: SmoothScrollProps) {
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduce = usePrefersReducedMotion();
 
+  useEffect(() => {
     let lenis: Lenis | null = null;
     let tick: ((time: number) => void) | null = null;
 
@@ -72,7 +73,7 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       if (tick) gsap.ticker.remove(tick);
       lenis?.destroy();
     };
-  }, []);
+  }, [reduce]);
 
   return <>{children}</>;
 }

@@ -96,11 +96,12 @@ const posts = fs
         ? data.related.map(String).filter(Boolean)
         : [],
       readingTimeMinutes: readingTimeMinutes(body),
-      _published: isPublished(data, today),
-    };
-  })
-  .filter((post) => post._published)
-  .map(({ _published, ...post }) => post)
+    _published: isPublished(data, today),
+  };
+})
+.filter((post) => post._published)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+.map(({ _published, ...post }) => post)
   .sort(comparePosts);
 
 /** Only the newest featured post keeps featured:true in the public JSON. */

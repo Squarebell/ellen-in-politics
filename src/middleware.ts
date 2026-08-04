@@ -7,7 +7,7 @@ import { SITE_HOST, SITE_URL, WWW_HOST } from "@/lib/site";
  * - www → apex (301)
  * - http → https on production hosts (301)
  */
-export function proxy(request: NextRequest) {
+export default function middleware(request: NextRequest) {
   const host = request.headers.get("host")?.split(":")[0]?.toLowerCase();
   if (host !== SITE_HOST && host !== WWW_HOST) {
     return NextResponse.next();

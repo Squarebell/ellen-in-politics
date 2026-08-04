@@ -3,7 +3,7 @@ const APEX_ORIGIN = "https://elleninpolitics.com";
 /**
  * Permanent redirect www → apex, preserving path and query.
  */
-export default {
+const wwwRedirectWorker: ExportedHandler = {
   async fetch(request: Request): Promise<Response> {
     try {
       const incoming = new URL(request.url);
@@ -24,3 +24,5 @@ export default {
     }
   },
 };
+
+export default wwwRedirectWorker;

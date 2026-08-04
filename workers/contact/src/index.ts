@@ -13,7 +13,8 @@ type ContactBody = {
 };
 
 function corsHeaders(origin: string | null, allowed: string[]) {
-  const ok = origin && allowed.includes(origin) ? origin : allowed[0] || "*";
+  const ok = origin && allowed.includes(origin) ? origin : allowed[0];
+  if (!ok) return {} as Record<string, string>;
   return {
     "Access-Control-Allow-Origin": ok,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -100,7 +101,7 @@ function buildRawEmail(options: {
   ].join("\r\n");
 }
 
-export default {
+const contactWorker: ExportedHandler<Env> = {
   async fetch(request: Request, env: Env): Promise<Response> {
     const allowed = env.ALLOWED_ORIGINS.split(",")
       .map((value) => value.trim())
@@ -195,3 +196,5 @@ export default {
     }
   },
 };
+
+export default contactWorker;
