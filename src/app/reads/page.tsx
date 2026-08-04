@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   title: "Reads",
   description:
     "Political Bookshelf — understanding politics through reading. Books and essays recommended by Ellen Carty.",
+  alternates: { canonical: "/reads" },
+  openGraph: { url: "/reads" },
 };
 
 export default function ReadsPage() {

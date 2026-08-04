@@ -31,12 +31,15 @@ export async function generateMetadata({
   if (!post) return { title: "Post" };
   const title = post.seoTitle || post.title;
   const description = post.seoDescription || post.excerpt;
+  const path = `/posts/${slug}`;
   return {
     title,
     description,
+    alternates: { canonical: path },
     openGraph: {
       title,
       description,
+      url: path,
       images: post.ogImage ? [{ url: post.ogImage }] : undefined,
       type: "article",
     },

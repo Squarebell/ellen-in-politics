@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   title: "Writing",
   description:
     "Essays and commentary from Ellen Carty on politics, civic life, and public voice.",
+  alternates: { canonical: "/writing" },
+  openGraph: { url: "/writing" },
 };
 
 export default function WritingPage() {

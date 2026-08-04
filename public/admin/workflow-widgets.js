@@ -230,7 +230,7 @@
           "div",
           { className: "wf-panel__slug" },
           h("span", { className: "wf-panel__slug-label" }, "Public URL"),
-          h("code", { className: "wf-panel__slug-url" }, "elleninpolitics.com" + urlPath),
+          h("code", { className: "wf-panel__slug-url" }, "https://elleninpolitics.com" + urlPath),
           h(
             "p",
             { className: "wf-panel__slug-warn" },

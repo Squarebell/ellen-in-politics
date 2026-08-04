@@ -17,9 +17,11 @@
     "enabled": true
   },
   "workers_dev": true,
+  // Apex is the only custom domain for the site Worker. www is handled by
+  // workers/www-redirect (301 → https://elleninpolitics.com). src/proxy.ts
+  // remains a safety net if www traffic ever reaches this Worker.
   "routes": [
-    { "pattern": "elleninpolitics.com", "custom_domain": true },
-    { "pattern": "www.elleninpolitics.com", "custom_domain": true }
+    { "pattern": "elleninpolitics.com", "custom_domain": true }
   ],
   "vars": {
     "NEXT_PUBLIC_CONTACT_API": "https://ellen-contact.squarebell.workers.dev"
