@@ -7,8 +7,10 @@ import { PostsTeaser } from "@/components/PostsTeaser";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Story } from "@/components/Story";
+import { ReadsTeaser } from "@/components/ReadsTeaser";
 import { WatchTeaser } from "@/components/WatchTeaser";
 import { getHomepagePosts } from "@/lib/posts";
+import { getAllReads } from "@/lib/reads";
 import { getAllVideos } from "@/lib/videos";
 
 export const dynamic = "force-static";
@@ -16,6 +18,7 @@ export const dynamic = "force-static";
 export default function Home() {
   const posts = getHomepagePosts();
   const videos = getAllVideos();
+  const reads = getAllReads();
 
   return (
     <SmoothScroll>
@@ -25,6 +28,7 @@ export default function Home() {
         <Hero />
         <PostsTeaser posts={posts} />
         <WatchTeaser videos={videos} />
+        <ReadsTeaser reads={reads} />
         <Story />
         <About />
         <Connect />
