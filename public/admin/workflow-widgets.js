@@ -455,6 +455,12 @@
       } catch (err) {
         src = String(imagePath || "");
       }
+      // Freshly uploaded (draft) covers aren't on the server yet; cms.js
+      // shares blob previews for them via window.EllenCoverPreviews.
+      var draftPreviews = window.EllenCoverPreviews || {};
+      if (imagePath && draftPreviews[String(imagePath)]) {
+        src = draftPreviews[String(imagePath)];
+      }
       var options = ["center", "top", "bottom", "left", "right"];
       return h(
         "div",

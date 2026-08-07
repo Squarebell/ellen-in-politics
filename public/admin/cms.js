@@ -40,17 +40,59 @@
     return parseAspect(field && field.get("aspect"), 16 / 10);
   }
 
+  /**
+   * Blob preview URLs for media that is uploaded but not yet published
+   * (draft media). Keyed by the public path stored in the entry (e.g.
+   * "/uploads/covers/photo.jpg"). Shared with workflow-widgets.js so the
+   * focal-point widget can preview freshly uploaded covers too.
+   */
+  var draftPreviewUrls = (window.EllenCoverPreviews = window.EllenCoverPreviews || {});
+
+  function draftBlobUrl(asset) {
+    // Decap's placeholder asset while media loads — not a real preview.
+    if (!asset || asset.path === "empty.svg" || !asset.fileObj) return "";
+    try {
+      var s = typeof asset.toString === "function" ? asset.toString() : "";
+      if (s && (s.indexOf("blob:") === 0 || s.indexOf("data:") === 0)) return s;
+    } catch {
+      /* ignore */
+    }
+    return "";
+  }
+
   function assetUrl(getAsset, value, field) {
     if (!value) return "";
+    var raw = String(value);
     try {
       var asset = getAsset ? getAsset(value, field) : null;
       if (asset && typeof asset.toString === "function") {
-        return asset.toString();
+        var resolved = asset.toString();
+        if (resolved && resolved !== raw) return resolved;
       }
     } catch (err) {
       /* draft assets can throw before they settle */
     }
-    return String(value);
+    /**
+     * Decap ≥3.4 treats leading-slash public paths as "absolute", so
+     * getAsset() returns the raw site URL — which 404s for freshly uploaded
+     * (draft) media until the entry is published and deployed. Retry without
+     * the slash so Decap resolves it against the field's media_folder and
+     * finds the in-memory draft blob instead.
+     */
+    if (raw.charAt(0) === "/") {
+      if (draftPreviewUrls[raw]) return draftPreviewUrls[raw];
+      try {
+        var draftAsset = getAsset ? getAsset(raw.replace(/^\/+/, ""), field) : null;
+        var blobUrl = draftBlobUrl(draftAsset);
+        if (blobUrl) {
+          draftPreviewUrls[raw] = blobUrl;
+          return blobUrl;
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+    return raw;
   }
 
   function basename(path) {
@@ -115,6 +157,7 @@
         dragging: false,
         uploading: false,
         error: "",
+        brokenSrc: "",
       };
     },
 
@@ -136,7 +179,8 @@
         this.props.classNameWrapper !== nextProps.classNameWrapper ||
         this.state.dragging !== nextState.dragging ||
         this.state.uploading !== nextState.uploading ||
-        this.state.error !== nextState.error
+        this.state.error !== nextState.error ||
+        this.state.brokenSrc !== nextState.brokenSrc
       ) {
         return true;
       }
@@ -209,7 +253,7 @@
         this.props.onClearMediaControl(this.state.controlID);
       }
       this.props.onChange("");
-      if (this._mounted) this.setState({ error: "" });
+      if (this._mounted) this.setState({ error: "", brokenSrc: "" });
     },
 
     onDragOver: function (event) {
@@ -334,6 +378,16 @@
                 className: "cover-frame__image",
                 src: src,
                 alt: "",
+                onError: function () {
+                  if (this._mounted && this.state.brokenSrc !== src) {
+                    this.setState({ brokenSrc: src });
+                  }
+                }.bind(this),
+                onLoad: function () {
+                  if (this._mounted && this.state.brokenSrc) {
+                    this.setState({ brokenSrc: "" });
+                  }
+                }.bind(this),
                 style: {
                   objectPosition: (function () {
                     var focusField = field.get("focus_field");
@@ -416,6 +470,13 @@
         ),
         this.state.error
           ? h("p", { className: "cover-frame__error" }, this.state.error)
+          : null,
+        src && this.state.brokenSrc === src
+          ? h(
+              "p",
+              { className: "cover-frame__hint" },
+              "The photo is attached and saves with the post — the preview just can't display it yet. No need to remove or re-upload it."
+            )
           : null,
         h(
           "p",
