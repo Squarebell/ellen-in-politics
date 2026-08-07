@@ -33,6 +33,61 @@
     <!-- Workflow widgets: checklist, suggestions, focal point, etc. -->
     <script src="/admin/workflow-widgets.js"></script>
 
+    <!-- When editing an already-saved post, relabel “Publish” as “Update” so
+         it's clear that publishing again saves over the same post (it never
+         creates a duplicate). New entries keep the “Publish” wording. -->
+    <script>
+      (function () {
+        var RELABELS = {
+          "Publish": "Update",
+          "Publish now": "Update now",
+          "Publishing...": "Updating...",
+          "Publish and create new": "Update and create new",
+          "Publish and duplicate": "Update and duplicate",
+        };
+
+        function editingExistingEntry() {
+          // Existing entries live at #/collections/<name>/entries/<slug>;
+          // new ones at #/collections/<name>/new.
+          return /\/entries\//.test(window.location.hash || "");
+        }
+
+        function relabel() {
+          if (!editingExistingEntry() || !document.body) return;
+          var walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT
+          );
+          var node;
+          while ((node = walker.nextNode())) {
+            var text = node.nodeValue && node.nodeValue.trim();
+            if (text && Object.prototype.hasOwnProperty.call(RELABELS, text)) {
+              node.nodeValue = node.nodeValue.replace(text, RELABELS[text]);
+            }
+          }
+        }
+
+        var scheduled = false;
+        function scheduleRelabel() {
+          if (scheduled) return;
+          scheduled = true;
+          window.requestAnimationFrame(function () {
+            scheduled = false;
+            relabel();
+          });
+        }
+
+        var obs = new MutationObserver(scheduleRelabel);
+        obs.observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+        });
+        window.addEventListener("hashchange", scheduleRelabel);
+        scheduleRelabel();
+      })();
+    </script>
+
     <!-- Decap's avatar menu only has Logout — inject Analytics above it. -->
     <script>
       (function () {
