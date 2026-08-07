@@ -1,13 +1,15 @@
 {
-  "generatedAt": "2026-08-04T00:14:31.047Z",
+  "generatedAt": "2026-08-07T13:07:07.145Z",
   "topics": [
     "Career",
     "Civic",
+    "Congressional Oversight ",
     "Connection",
     "Democracy",
     "Feminism",
     "International Relations ",
-    "Policy"
+    "Policy",
+    "Voting rights "
   ],
   "series": [],
   "posts": [
@@ -15,16 +17,26 @@
       "slug": "reach-out-before-you-burn-out",
       "title": "Escalations In the Middle East ",
       "topic": "International Relations ",
-      "featured": true,
+      "featured": false,
       "draft": false,
       "image": "https://www.americancraftbeer.com/wp-content/uploads/2026/08/Depositphotos_156561592_S-1-Iran-war-bing-2.jpg",
       "ogImage": "",
       "date": "2026-03-02"
     },
     {
+      "slug": "inside-dr-fauccis-congressional-hearing",
+      "title": "Inside Dr. Faucci's Congressional Hearing ",
+      "topic": "Congressional Oversight ",
+      "featured": true,
+      "draft": false,
+      "image": "/uploads/covers/240603134213-anthony-fauci-covid-hearing-digvid.jpg",
+      "ogImage": "",
+      "date": "2026-08-07"
+    },
+    {
       "slug": "the-save-america-act",
       "title": "The \"Save\" America Act",
-      "topic": "Civic",
+      "topic": "Voting rights ",
       "featured": false,
       "draft": false,
       "image": "https://www.fau.edu/newsdesk/images/news/april2023-poll-image-2.jpg",
