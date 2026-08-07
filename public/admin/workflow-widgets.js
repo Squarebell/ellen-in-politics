@@ -428,6 +428,27 @@
   /*  focal-point — click image to set crop                              */
   /* ------------------------------------------------------------------ */
   var FocalPointControl = createClass({
+    // Decap's Widget wrapper only re-renders when this field's own value
+    // changes, so replacing the cover image would leave a stale preview here.
+    shouldComponentUpdate: function (nextProps) {
+      if (
+        this.props.value !== nextProps.value ||
+        this.props.getAsset !== nextProps.getAsset ||
+        this.props.classNameWrapper !== nextProps.classNameWrapper
+      ) {
+        return true;
+      }
+      var imageField = this.props.field.get("image_field") || "image";
+      var cur =
+        this.props.entry && this.props.entry.getIn
+          ? this.props.entry.getIn(["data", imageField])
+          : null;
+      var next =
+        nextProps.entry && nextProps.entry.getIn
+          ? nextProps.entry.getIn(["data", imageField])
+          : null;
+      return cur !== next;
+    },
     pick: function (value, event) {
       if (event) event.preventDefault();
       this.props.onChange(value);
@@ -454,6 +475,12 @@
         src = asset && asset.toString ? asset.toString() : String(imagePath || "");
       } catch (err) {
         src = String(imagePath || "");
+      }
+      // Freshly uploaded (draft) covers aren't on the server yet; cms.js
+      // shares blob previews for them via window.EllenCoverPreviews.
+      var draftPreviews = window.EllenCoverPreviews || {};
+      if (imagePath && draftPreviews[String(imagePath)]) {
+        src = draftPreviews[String(imagePath)];
       }
       var options = ["center", "top", "bottom", "left", "right"];
       return h(
