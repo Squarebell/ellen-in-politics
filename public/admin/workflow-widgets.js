@@ -428,6 +428,27 @@
   /*  focal-point — click image to set crop                              */
   /* ------------------------------------------------------------------ */
   var FocalPointControl = createClass({
+    // Decap's Widget wrapper only re-renders when this field's own value
+    // changes, so replacing the cover image would leave a stale preview here.
+    shouldComponentUpdate: function (nextProps) {
+      if (
+        this.props.value !== nextProps.value ||
+        this.props.getAsset !== nextProps.getAsset ||
+        this.props.classNameWrapper !== nextProps.classNameWrapper
+      ) {
+        return true;
+      }
+      var imageField = this.props.field.get("image_field") || "image";
+      var cur =
+        this.props.entry && this.props.entry.getIn
+          ? this.props.entry.getIn(["data", imageField])
+          : null;
+      var next =
+        nextProps.entry && nextProps.entry.getIn
+          ? nextProps.entry.getIn(["data", imageField])
+          : null;
+      return cur !== next;
+    },
     pick: function (value, event) {
       if (event) event.preventDefault();
       this.props.onChange(value);
