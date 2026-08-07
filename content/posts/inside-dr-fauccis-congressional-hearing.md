@@ -6,9 +6,9 @@ title: "Inside Dr. Faucci's Congressional Hearing "
 excerpt: What Dr. Fauci's Congressional Hearing Reveals About Politics and Oversight
 date: 2026-08-07
 topic: "Congressional Oversight "
-image: /uploads/covers/240603134213-anthony-fauci-covid-hearing-digvid.jpg
-imageAlt: Dr. Anthony Fauci testifies at a congressional hearing
+image: /uploads/covers/ade7bb97-f101-4862-baeb-54a7671fc450.jpg
 imageFocus: center
+imageAlt: Dr. Anthony Fauci testifies at a congressional hearing
 ---
 Last week, on July 29, 2026, Dr. Anthony Fauci appeared before Congress as part of an ongoing investigation into the federal government’s response to the COVID-19 pandemic. He testified before the U.S. Senate Homeland Security and Governmental Affairs Committee, chaired by Senator Rand Paul. The significance of this hearing is not simply what was said by Dr. Fauci, but how the hearing itself illustrates the increasingly political nature of congressional oversight.
 
