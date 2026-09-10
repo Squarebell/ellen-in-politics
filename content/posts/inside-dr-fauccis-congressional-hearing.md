@@ -1,11 +1,11 @@
 ---
 draft: false
-featured: true
+featured: false
 homepage: true
-title: "Inside Dr. Faucci's Congressional Hearing "
+title: 'Inside Dr. Faucci''s Congressional Hearing '
 excerpt: What Dr. Fauci's Congressional Hearing Reveals About Politics and Oversight
-date: 2026-08-07
-topic: "Congressional Oversight "
+date: 2026-08-07T00:00:00.000Z
+topic: 'Congressional Oversight '
 image: /uploads/covers/ade7bb97-f101-4862-baeb-54a7671fc450.jpg
 imageFocus: center
 imageAlt: Dr. Anthony Fauci testifies at a congressional hearing
