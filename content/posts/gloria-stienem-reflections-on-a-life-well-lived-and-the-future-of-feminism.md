@@ -2,12 +2,9 @@
 draft: false
 featured: true
 homepage: true
-title: "Gloria Stienem- Reflections on a Life Well Lived and the Future of Feminism "
-excerpt: >
-  Gloria Steinem lived an amazing life and left an even greater legacy. Her
-  influence set the stage for the future of feminism and what it means for a
-  movement to evolve as progress is made. Thank you and rest in peace Gloria
-  Steinem. 
+title: "Gloria Steinem- Reflections on a Life Well Lived and the Future of Feminism "
+excerpt: "The life of Gloria Steinem and how she set the stage for feminism
+  moving forward. "
 date: 2026-09-09
 topic: Feminism
 image: /uploads/covers/gloria-steinem-031826-6-93a2820294ca4d1f83d005ed97bd4fa6.jpg
