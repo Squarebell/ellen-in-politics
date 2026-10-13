@@ -173,6 +173,9 @@
     },
 
     shouldComponentUpdate: function (nextProps, nextState) {
+      // Decap's Widget wrapper calls this with nextProps only. React also
+      // calls it for local state updates, supplying nextState in that case.
+      nextState = nextState || this.state;
       if (
         this.props.value !== nextProps.value ||
         this.props.getAsset !== nextProps.getAsset ||
