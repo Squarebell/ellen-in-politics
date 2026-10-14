@@ -43,19 +43,19 @@ export default function ReadsPage() {
                 const inner = (
                   <>
                     {item.image ? (
-                      <div className="relative aspect-[2/3] w-20 shrink-0 overflow-hidden bg-marble-deep sm:w-24">
+                      <div className="relative h-[120px] w-20 shrink-0 self-start sm:h-36 sm:w-24">
                         <Image
                           src={item.image}
                           alt={item.imageAlt || item.title}
                           fill
                           unoptimized={!canOptimizeImage(item.image)}
-                          className="object-cover"
-                          sizes="96px"
+                          className="object-contain object-left-top"
+                          sizes="(min-width: 640px) 96px, 80px"
                         />
                       </div>
                     ) : (
                       <div
-                        className="hidden aspect-[2/3] w-20 shrink-0 bg-marble-deep sm:block sm:w-24"
+                        className="hidden h-[120px] w-20 shrink-0 self-start bg-marble-deep sm:block sm:h-36 sm:w-24"
                         aria-hidden
                       />
                     )}
