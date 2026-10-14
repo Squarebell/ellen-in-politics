@@ -10,4 +10,5 @@ note: "A Colony in a Nation discusses the issue of mass incarceration in the
   how, in many ways, Black and white Americans are living in two different
   Americas. "
 topic: Civic
+image: /uploads/covers/acolonyinanation.png
 ---
