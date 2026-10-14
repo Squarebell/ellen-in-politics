@@ -11,6 +11,7 @@ note: >
   it includes powerful ways to get your message across in a society where women
   are more likely to be overlooked  and disrespected. 
 topic: Feminism
+image: /uploads/covers/whatshesaid.jpg
 imageAlt: ""
 link: ""
 ---
