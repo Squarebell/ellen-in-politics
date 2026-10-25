@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 featured: false
 series: AI
 title: Women, Wealth and the Future of AI
