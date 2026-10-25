@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
+import yaml from "js-yaml";
 
 const widgets = new Map();
 vm.runInNewContext(
@@ -137,4 +138,16 @@ test('publishing waits for the upload to finish', () => {
   assert.match(control.isValid().error.message, /Wait/);
   control.state.uploading = false;
   assert.equal(control.isValid().error, false);
+});
+
+ test('CMS configuration distinguishes global media plugins from field options', () => {
+  const config = yaml.load(readFileSync(new URL('../public/admin/config.yml', import.meta.url), 'utf8'));
+  // Decap requires a plugin name for a global media_library, even when
+  // only config options are supplied. Field-level config needs no name.
+  if (config.media_library) {
+    assert.equal(typeof config.media_library.name, 'string');
+    assert.ok(config.media_library.name.length > 0);
+  }
+  const video = config.collections.find(c => c.name === 'videos').fields.find(f => f.name === 'video');
+  assert.ok(video.media_library.config.max_file_size <= 25 * 1024 * 1024);
 });
