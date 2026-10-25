@@ -16,6 +16,8 @@ on:
       - "public/uploads/covers/**"
       - "public/uploads/posters/**"
       - "public/videos/**"
+      - "scripts/transcribe_videos.py"
+      - ".github/workflows/transcribe.yml"
   workflow_dispatch:
 
 concurrency:
@@ -55,12 +57,6 @@ jobs:
       - name: Process uploaded videos (mov→mp4, posters, duration)
         run: python3 scripts/process_videos.py
 
-      - name: Install faster-whisper
-        run: pip install faster-whisper
-
-      - name: Transcribe videos missing captions
-        run: python3 scripts/transcribe_videos.py
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -71,6 +67,37 @@ jobs:
         run: npm ci
 
       - name: Check CMS media paths
+        run: npm run check:media
+
+      - name: Publish playable videos before generating captions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet; then
+            echo "No new video assets generated."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/uploads/videos public/uploads/posters public/uploads/captions content/videos
+          git commit -m "Publish processed videos and thumbnails [auto-captions]"
+          git push origin main
+          # Pushes made with GITHUB_TOKEN don't fire the deploy workflow on
+          # their own, so kick it off explicitly.
+          gh workflow run deploy.yml --ref main
+
+      - name: Install faster-whisper
+        continue-on-error: true
+        run: pip install faster-whisper
+
+      - name: Test caption audio input
+        run: python3 scripts/test_transcribe_videos.py
+
+      - name: Transcribe videos missing captions
+        continue-on-error: true
+        run: python3 scripts/transcribe_videos.py
+
+      - name: Check caption media paths
         run: npm run check:media
 
       - name: Commit captions and trigger deploy

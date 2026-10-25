@@ -30,6 +30,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import wave
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -118,8 +119,17 @@ def clean_text(text: str) -> str:
 
 
 def transcribe(model, wav_path: Path, vocab_prompt: str | None) -> list[dict]:
+    # ffmpeg already produced mono 16 kHz PCM. Pass samples directly so
+    # Whisper does not decode through PyAV's version-dependent file API.
+    import numpy as np
+
+    with wave.open(str(wav_path), "rb") as audio:
+        if (audio.getnchannels(), audio.getframerate(), audio.getsampwidth()) != (1, 16000, 2):
+            raise ValueError("Expected mono 16 kHz 16-bit PCM audio")
+        samples = np.frombuffer(audio.readframes(audio.getnframes()), dtype="<i2")
+    samples = samples.astype(np.float32) / 32768.0
     segments, _info = model.transcribe(
-        str(wav_path),
+        samples,
         language=LANGUAGE,
         temperature=0.0,
         beam_size=5,
