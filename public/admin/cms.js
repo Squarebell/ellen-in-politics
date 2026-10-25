@@ -621,7 +621,11 @@
     },
 
     isValid: function () {
-      return { error: this.state.uploading ? "Wait for the video upload to finish before publishing." : false };
+      return {
+        error: this.state.uploading
+          ? { message: "Wait for the video upload to finish before publishing." }
+          : false,
+      };
     },
 
     maxBytes: function () {

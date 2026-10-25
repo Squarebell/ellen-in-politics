@@ -134,7 +134,7 @@ for (const widget of ['video-file', 'cover-frame']) {
 test('publishing waits for the upload to finish', () => {
   const { control } = uploadControl('video-file', () => undefined);
   control.state.uploading = true;
-  assert.match(control.isValid().error, /Wait/);
+  assert.match(control.isValid().error.message, /Wait/);
   control.state.uploading = false;
   assert.equal(control.isValid().error, false);
 });
