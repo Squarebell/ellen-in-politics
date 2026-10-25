@@ -9,6 +9,8 @@ description: "From economic opportunity to ethical decision- making, women need
 date: 2026-10-24
 orientation: portrait
 posterFocus: center
-video: /uploads/videos/video34567.mov
+video: /uploads/videos/test-1-vid.mp4
+poster: /uploads/posters/test-1-vid.jpg
+durationLabel: "2:10"
 instagramUrl: https://www.instagram.com/elleninpolitics/
 ---

@@ -10,6 +10,8 @@ description: "Freedom of the press isn't just important- it's fundamental.
 date: 2026-09-28
 orientation: portrait
 posterFocus: center
-video: /uploads/videos/video.mov
+video: /uploads/videos/test-2-vid.mp4
+poster: /uploads/posters/test-2-vid.jpg
+durationLabel: "2:15"
 instagramUrl: https://www.instagram.com/elleninpolitics/
 ---
