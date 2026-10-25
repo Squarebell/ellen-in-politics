@@ -17,11 +17,6 @@ search: true
 media_folder: public/uploads
 public_folder: /uploads
 
-# Keep library uploads below the host’s 25 MiB per-file limit too.
-media_library:
-  config:
-    max_file_size: 25165824
-
 collections:
   - name: posts
     label: Writing
@@ -275,6 +270,9 @@ collections:
         media_folder: /public/uploads/videos
         public_folder: /uploads/videos
         max_mb: 24
+        media_library:
+          config:
+            max_file_size: 25165824
         hint: "Upload from your iPhone (.mov or .mp4, under 24MB)."
       - label: Captions status
         name: captionsStatus
