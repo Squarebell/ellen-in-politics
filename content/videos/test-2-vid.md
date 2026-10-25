@@ -1,10 +1,13 @@
 ---
-draft: true
+draft: false
 featured: false
-title: "test 2 vid "
+series: "Press "
+title: President Trump's Media Ban
 eyebrow: Watch
-description: "1234"
-date: 2026-10-24
+description: "Freedom of the press isn't just important- it's fundamental.
+  Diving into the facts of what is happening with the President's ongoing media
+  ban and why it matters.  "
+date: 2026-09-28
 orientation: portrait
 posterFocus: center
 video: /uploads/videos/video.mov
