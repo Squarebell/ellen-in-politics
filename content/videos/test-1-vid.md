@@ -10,6 +10,7 @@ date: 2026-10-24
 orientation: portrait
 posterFocus: center
 video: /uploads/videos/test-1-vid.mp4
+captions: /uploads/captions/test-1-vid.vtt
 poster: /uploads/posters/test-1-vid.jpg
 durationLabel: "2:10"
 instagramUrl: https://www.instagram.com/elleninpolitics/
