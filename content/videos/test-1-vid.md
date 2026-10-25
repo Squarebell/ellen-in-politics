@@ -1,6 +1,6 @@
 ---
 draft: false
-featured: false
+featured: true
 series: AI
 title: Women, Wealth and the Future of AI
 eyebrow: Watch
