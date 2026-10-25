@@ -17,6 +17,11 @@ search: true
 media_folder: public/uploads
 public_folder: /uploads
 
+# Keep library uploads below the host’s 25 MiB per-file limit too.
+media_library:
+  config:
+    max_file_size: 25165824
+
 collections:
   - name: posts
     label: Writing
@@ -158,7 +163,7 @@ collections:
     label_singular: Video
     description: >-
       Use the Workflow panel for checklist + post-publish pipeline status.
-      Keep videos under ~95MB. Leave Captions empty for auto-CC.
+      Keep videos under 24MB. Leave Captions empty for auto-CC.
     folder: content/videos
     create: true
     delete: true
@@ -181,7 +186,7 @@ collections:
         required: false
         kind: videos
         notes:
-          - "Keep video files under ~95MB (.mov or .mp4)."
+          - "Keep video files under 24MB (.mov or .mp4)."
           - "Featured pins the homepage Watch clip. Series groups clips on Watch."
       - label: Draft
         name: draft
@@ -269,8 +274,8 @@ collections:
         widget: video-file
         media_folder: /public/uploads/videos
         public_folder: /uploads/videos
-        max_mb: 95
-        hint: "Upload from your iPhone (.mov or .mp4, under ~95MB)."
+        max_mb: 24
+        hint: "Upload from your iPhone (.mov or .mp4, under 24MB)."
       - label: Captions status
         name: captionsStatus
         widget: captions-status

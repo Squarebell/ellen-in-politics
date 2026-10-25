@@ -125,6 +125,9 @@
 
   function extractMediaFile(result) {
     if (!result) return null;
+    if (result.type === "MEDIA_PERSIST_FAILURE" || result.error) {
+      throw new Error("The media upload failed. Check your connection and CMS sign-in, then retry. Your previous file has been kept.");
+    }
     if (result.path || result.url || result.name) return result;
     if (result.payload) {
       if (result.payload.path || result.payload.url || result.payload.name) {
@@ -132,7 +135,7 @@
       }
       if (result.payload.file) return result.payload.file;
     }
-    return null;
+    throw new Error("The CMS did not confirm the uploaded file. Retry or choose a file from the library. Your previous file has been kept.");
   }
 
   function formatDateLabel(date) {
@@ -311,9 +314,18 @@
       }
 
       this.setState({ uploading: true, error: sizeWarning });
-      Promise.resolve(this.props.onPersistMedia(file, { field: this.props.field }))
+      return Promise.resolve()
+        .then(function () {
+          return self.props.onPersistMedia(file, { field: self.props.field });
+        })
         .then(function (result) {
+          if (!self._mounted) return;
           var mediaFile = extractMediaFile(result);
+          // Decap returns undefined when replacement is cancelled.
+          if (!mediaFile) {
+            self.setState({ uploading: false });
+            return;
+          }
           var nextValue = publicPathForMedia(self.props.field, mediaFile, file);
           self.props.onChange(nextValue);
           if (self._mounted) {
@@ -328,7 +340,7 @@
           if (self._mounted) {
             self.setState({
               uploading: false,
-              error: "Couldn’t upload that photo. Try Choose from library.",
+              error: "Couldn’t upload that photo. Check your connection and CMS sign-in, then retry or use Choose from library. Your previous photo has been kept.",
             });
           }
         });
@@ -577,7 +589,7 @@
   /* ------------------------------------------------------------------ */
   /*  video-file — file picker with size guardrail                       */
   /* ------------------------------------------------------------------ */
-  var MAX_VIDEO_MB_DEFAULT = 95;
+  var MAX_VIDEO_MB_DEFAULT = 24;
 
   var VideoFileControl = createClass({
     getInitialState: function () {
@@ -608,8 +620,12 @@
       }
     },
 
+    isValid: function () {
+      return { error: this.state.uploading ? "Wait for the video upload to finish before publishing." : false };
+    },
+
     maxBytes: function () {
-      var maxMb = Number(this.props.field.get("max_mb")) || MAX_VIDEO_MB_DEFAULT;
+      var maxMb = Math.min(Number(this.props.field.get("max_mb")) || MAX_VIDEO_MB_DEFAULT, MAX_VIDEO_MB_DEFAULT);
       return maxMb * 1024 * 1024;
     },
 
@@ -654,7 +670,7 @@
             (file.size / (1024 * 1024)).toFixed(1) +
             "MB. Keep videos under ~" +
             maxMb +
-            "MB (compress on your phone) so GitHub stays reliable.",
+            "MB (compress or export a smaller copy) so the website host can accept it.",
         });
         return;
       }
@@ -663,9 +679,18 @@
         return;
       }
       this.setState({ uploading: true, error: "" });
-      Promise.resolve(this.props.onPersistMedia(file, { field: this.props.field }))
+      return Promise.resolve()
+        .then(function () {
+          return self.props.onPersistMedia(file, { field: self.props.field });
+        })
         .then(function (result) {
+          if (!self._mounted) return;
           var mediaFile = extractMediaFile(result);
+          // Decap returns undefined when replacement is cancelled.
+          if (!mediaFile) {
+            self.setState({ uploading: false });
+            return;
+          }
           var nextValue = publicPathForMedia(self.props.field, mediaFile, file);
           self.props.onChange(nextValue);
           if (self._mounted) self.setState({ uploading: false });
@@ -675,7 +700,7 @@
           if (self._mounted) {
             self.setState({
               uploading: false,
-              error: "Couldn’t upload that video. Try Choose from library.",
+              error: "Couldn’t upload that video. Check your connection and CMS sign-in, then retry or use Choose from library. Your previous video has been kept.",
             });
           }
         });
@@ -683,7 +708,7 @@
 
     render: function () {
       var value = this.props.value || "";
-      var maxMb = Number(this.props.field.get("max_mb")) || MAX_VIDEO_MB_DEFAULT;
+      var maxMb = Math.min(Number(this.props.field.get("max_mb")) || MAX_VIDEO_MB_DEFAULT, MAX_VIDEO_MB_DEFAULT);
       return h(
         "div",
         { className: "video-file-widget", id: this.props.forID },
@@ -728,7 +753,7 @@
         h(
           "p",
           { className: "cover-frame__hint" },
-          "Max ~" +
+          "Choose a file, wait for its path to appear, then Publish (or Update) to send it to the main site. Max ~" +
             maxMb +
             "MB (.mov or .mp4). After Publish, remux + captions usually take a few minutes — refresh Watch later."
         )
